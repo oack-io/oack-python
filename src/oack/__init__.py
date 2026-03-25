@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+from oack._auth import async_device_flow_authenticate, device_flow_authenticate
 from oack._client import AsyncBaseClient, BaseClient
 from oack._exceptions import (
     APIError,
@@ -152,4 +153,6 @@ __all__ = [
     "OackError",
     "RateLimitError",
     "__version__",
+    "async_device_flow_authenticate",
+    "device_flow_authenticate",
 ]

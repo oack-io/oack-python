@@ -75,6 +75,31 @@ client = AsyncOack(
 client = AsyncOack(api_key_func=lambda: get_current_jwt())
 ```
 
+## Browser Login (Device Flow)
+
+Authenticate via browser instead of a static API key. The JWT lives only in memory and disappears when the program exits.
+
+```python
+from oack import Oack, device_flow_authenticate
+
+# Opens your browser, waits for approval, returns JWT
+token = device_flow_authenticate()
+
+with Oack(api_key=token) as client:
+    teams = client.teams.list()
+```
+
+Async version:
+
+```python
+from oack import AsyncOack, async_device_flow_authenticate
+
+token = await async_device_flow_authenticate()
+
+async with AsyncOack(api_key=token) as client:
+    teams = await client.teams.list()
+```
+
 ## Error Handling
 
 ```python
