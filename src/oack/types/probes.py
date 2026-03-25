@@ -30,7 +30,7 @@ class ProbeList(BaseModel):
     total: int = 0
 
     @classmethod
-    def from_response(cls, data: list[dict]) -> ProbeList:  # type: ignore[type-arg]
+    def from_response(cls, data: list[dict]) -> ProbeList:
         probes = [Probe.model_validate(p) for p in data]
         return cls(probes=probes, total=len(probes))
 
