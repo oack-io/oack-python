@@ -53,7 +53,7 @@ class AsyncProbes:
 
     async def get_details(self, team_id: str, monitor_id: str, probe_id: str) -> dict[str, Any]:
         resp = await self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/{probe_id}/details")
-        return json.loads(resp)  # type: ignore[no-any-return]
+        return json.loads(resp)
 
     async def download_pcap(self, team_id: str, monitor_id: str, probe_id: str) -> bytes:
         return await self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/{probe_id}/pcap")
@@ -96,7 +96,7 @@ class Probes:
 
     def get_details(self, team_id: str, monitor_id: str, probe_id: str) -> dict[str, Any]:
         resp = self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/{probe_id}/details")
-        return json.loads(resp)  # type: ignore[no-any-return]
+        return json.loads(resp)
 
     def download_pcap(self, team_id: str, monitor_id: str, probe_id: str) -> bytes:
         return self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/{probe_id}/pcap")

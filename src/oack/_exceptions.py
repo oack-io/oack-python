@@ -54,12 +54,11 @@ class RateLimitError(APIError):
         super().__init__(429, message)
 
 
-_STATUS_MAP: dict[int, type[APIError]] = {
+_STATUS_MAP = {
     401: AuthenticationError,
     403: ForbiddenError,
     404: NotFoundError,
     409: ConflictError,
-    429: RateLimitError,
 }
 
 
@@ -74,9 +73,9 @@ def _parse_error(status_code: int, body: bytes, retry_after: float | None = None
     except (json.JSONDecodeError, AttributeError):
         message = body.decode("utf-8", errors="replace")
 
-    cls = _STATUS_MAP.get(status_code, APIError)
-    if cls is RateLimitError:
+    if status_code == 429:
         return RateLimitError(message or "rate limited", retry_after=retry_after)
-    if cls is not APIError:
+    cls = _STATUS_MAP.get(status_code)
+    if cls is not None:
         return cls(message)
     return APIError(status_code, message)

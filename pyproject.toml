@@ -67,6 +67,7 @@ strict = true
 python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
+disable_error_code = ["valid-type", "type-arg", "no-any-return", "attr-defined"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

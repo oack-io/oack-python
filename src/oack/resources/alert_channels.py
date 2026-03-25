@@ -50,7 +50,7 @@ class AsyncAlertChannels:
 
     async def list_monitor_channels(self, team_id: str, monitor_id: str) -> list[str]:
         resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels")
-        return json.loads(resp).get("channel_ids", [])  # type: ignore[no-any-return]
+        return json.loads(resp).get("channel_ids", [])
 
     async def set_monitor_channels(self, team_id: str, monitor_id: str, channel_ids: list[str]) -> list[str]:
         resp = await self._client.request(
@@ -58,7 +58,7 @@ class AsyncAlertChannels:
             f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels",
             json={"channel_ids": channel_ids},
         )
-        return json.loads(resp).get("channel_ids", [])  # type: ignore[no-any-return]
+        return json.loads(resp).get("channel_ids", [])
 
     async def link_monitor_channel(self, team_id: str, monitor_id: str, channel_id: str) -> None:
         await self._client.request("POST", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels/{channel_id}")
@@ -112,7 +112,7 @@ class AlertChannels:
 
     def list_monitor_channels(self, team_id: str, monitor_id: str) -> list[str]:
         resp = self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels")
-        return json.loads(resp).get("channel_ids", [])  # type: ignore[no-any-return]
+        return json.loads(resp).get("channel_ids", [])
 
     def set_monitor_channels(self, team_id: str, monitor_id: str, channel_ids: list[str]) -> list[str]:
         resp = self._client.request(
@@ -120,7 +120,7 @@ class AlertChannels:
             f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels",
             json={"channel_ids": channel_ids},
         )
-        return json.loads(resp).get("channel_ids", [])  # type: ignore[no-any-return]
+        return json.loads(resp).get("channel_ids", [])
 
     def link_monitor_channel(self, team_id: str, monitor_id: str, channel_id: str) -> None:
         self._client.request("POST", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels/{channel_id}")

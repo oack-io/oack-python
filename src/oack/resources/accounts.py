@@ -144,7 +144,7 @@ class Accounts:
         self._client.request("DELETE", f"/api/v1/accounts/{account_id}/invites/{invite_id}")
 
 
-def _parse_list(resp: bytes) -> list[dict]:  # type: ignore[type-arg]
+def _parse_list(resp: bytes) -> list[dict]:
     import json
 
-    return json.loads(resp)  # type: ignore[no-any-return]
+    return json.loads(resp)
