@@ -1,6 +1,6 @@
 [![PyPI version](https://img.shields.io/pypi/v/oack.svg)](https://pypi.org/project/oack/)
 [![Python versions](https://img.shields.io/pypi/pyversions/oack.svg)](https://pypi.org/project/oack/)
-[![CI](https://github.com/oackio/oack-python/actions/workflows/ci.yml/badge.svg)](https://github.com/oackio/oack-python/actions/workflows/ci.yml)
+[![CI](https://github.com/oack-io/oack-python/actions/workflows/ci.yml/badge.svg)](https://github.com/oack-io/oack-python/actions/workflows/ci.yml)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 [![Checked with mypy](https://img.shields.io/badge/type--checked-mypy-blue.svg)](https://mypy-lang.org/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
