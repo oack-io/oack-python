@@ -45,7 +45,7 @@ class AsyncProbes:
     ) -> ProbeList:
         params = _build_list_params(limit, offset, is_up)
         resp = await self._client.request("GET", _probe_path(team_id, monitor_id), params=params or None)
-        return ProbeList.model_validate_json(resp)
+        return ProbeList.from_response(json.loads(resp))
 
     async def get(self, team_id: str, monitor_id: str, probe_id: str) -> Probe:
         resp = await self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/{probe_id}")
@@ -88,7 +88,7 @@ class Probes:
     ) -> ProbeList:
         params = _build_list_params(limit, offset, is_up)
         resp = self._client.request("GET", _probe_path(team_id, monitor_id), params=params or None)
-        return ProbeList.model_validate_json(resp)
+        return ProbeList.from_response(json.loads(resp))
 
     def get(self, team_id: str, monitor_id: str, probe_id: str) -> Probe:
         resp = self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/{probe_id}")

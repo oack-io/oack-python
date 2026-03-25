@@ -13,10 +13,10 @@ from oack.types.metrics import (
     Expiration,
     ExpirationDomain,
     ExpirationSSL,
+    MetricsWindow,
     MonitorMetrics,
     TimelineEvent,
     UpdateChartEventParams,
-    WindowMetrics,
 )
 from oack.types.monitors import CreateMonitorParams, Monitor
 from oack.types.notifications import MonitorNotification, NotificationDefaults
@@ -71,6 +71,7 @@ __all__ = [
     "IncidentUpdate",
     "Maintenance",
     "MaintenanceUpdate",
+    "MetricsWindow",
     "Monitor",
     "MonitorChannelsResponse",
     "MonitorMetrics",
@@ -97,5 +98,4 @@ __all__ = [
     "UpdateChartEventParams",
     "User",
     "Watchdog",
-    "WindowMetrics",
 ]

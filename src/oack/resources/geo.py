@@ -20,9 +20,10 @@ class AsyncGeo:
         return [Checker.model_validate(c) for c in json.loads(resp)]
 
     async def list_regions(self) -> list[GeoRegion]:
-        resp = await self._client.request("GET", "/api/v1/regions")
+        resp = await self._client.request("GET", "/api/v1/geo/regions")
         data = json.loads(resp)
-        return [GeoRegion.model_validate(r) for r in data.get("regions", [])]
+        regions = data.get("regions", [])
+        return [GeoRegion.model_validate(r) for r in regions]
 
 
 class Geo:
@@ -34,6 +35,7 @@ class Geo:
         return [Checker.model_validate(c) for c in json.loads(resp)]
 
     def list_regions(self) -> list[GeoRegion]:
-        resp = self._client.request("GET", "/api/v1/regions")
+        resp = self._client.request("GET", "/api/v1/geo/regions")
         data = json.loads(resp)
-        return [GeoRegion.model_validate(r) for r in data.get("regions", [])]
+        regions = data.get("regions", [])
+        return [GeoRegion.model_validate(r) for r in regions]

@@ -24,8 +24,15 @@ class Probe(BaseModel):
 
 
 class ProbeList(BaseModel):
-    probes: list[Probe]
-    total: int
+    """Wrapper for probe list responses. The API returns a plain array."""
+
+    probes: list[Probe] = []
+    total: int = 0
+
+    @classmethod
+    def from_response(cls, data: list[dict]) -> ProbeList:  # type: ignore[type-arg]
+        probes = [Probe.model_validate(p) for p in data]
+        return cls(probes=probes, total=len(probes))
 
 
 class ProbeAggBucket(BaseModel):

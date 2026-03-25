@@ -15,6 +15,7 @@ from oack.types.status_pages import (
     MaintenanceUpdate,
     StatusPage,
     Subscriber,
+    Watchdog,
 )
 
 if TYPE_CHECKING:
@@ -208,6 +209,23 @@ class AsyncStatusPages:
     async def delete_incident_template(self, account_id: str, page_id: str, template_id: str) -> None:
         await self._client.request("DELETE", _page_path(account_id, page_id) + f"/incident-templates/{template_id}")
 
+    # --- Watchdogs ---
+
+    async def create_watchdog(self, account_id: str, page_id: str, comp_id: str, params: dict) -> Watchdog:
+        resp = await self._client.request(
+            "POST", _page_path(account_id, page_id) + f"/components/{comp_id}/watchdogs", json=params
+        )
+        return Watchdog.model_validate_json(resp)
+
+    async def list_watchdogs(self, account_id: str, page_id: str, comp_id: str) -> list[Watchdog]:
+        resp = await self._client.request("GET", _page_path(account_id, page_id) + f"/components/{comp_id}/watchdogs")
+        return [Watchdog.model_validate(w) for w in json.loads(resp)]
+
+    async def delete_watchdog(self, account_id: str, page_id: str, comp_id: str, watchdog_id: str) -> None:
+        await self._client.request(
+            "DELETE", _page_path(account_id, page_id) + f"/components/{comp_id}/watchdogs/{watchdog_id}"
+        )
+
 
 class StatusPages:
     def __init__(self, client: BaseClient) -> None:
@@ -383,3 +401,20 @@ class StatusPages:
 
     def delete_incident_template(self, account_id: str, page_id: str, template_id: str) -> None:
         self._client.request("DELETE", _page_path(account_id, page_id) + f"/incident-templates/{template_id}")
+
+    # --- Watchdogs ---
+
+    def create_watchdog(self, account_id: str, page_id: str, comp_id: str, params: dict) -> Watchdog:
+        resp = self._client.request(
+            "POST", _page_path(account_id, page_id) + f"/components/{comp_id}/watchdogs", json=params
+        )
+        return Watchdog.model_validate_json(resp)
+
+    def list_watchdogs(self, account_id: str, page_id: str, comp_id: str) -> list[Watchdog]:
+        resp = self._client.request("GET", _page_path(account_id, page_id) + f"/components/{comp_id}/watchdogs")
+        return [Watchdog.model_validate(w) for w in json.loads(resp)]
+
+    def delete_watchdog(self, account_id: str, page_id: str, comp_id: str, watchdog_id: str) -> None:
+        self._client.request(
+            "DELETE", _page_path(account_id, page_id) + f"/components/{comp_id}/watchdogs/{watchdog_id}"
+        )

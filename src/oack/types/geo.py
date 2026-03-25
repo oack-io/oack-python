@@ -9,12 +9,17 @@ from pydantic import BaseModel
 
 class Checker(BaseModel):
     id: str
-    region: str
-    country: str
-    ip: str
-    asn: Any
     mode: str
-    status: str
+    name: str = ""
+    public_ip: str = ""
+    country: str = ""
+    region: str = ""
+    latitude: float | None = None
+    longitude: float | None = None
+    asn: Any = 0
+    asn_org: str = ""
+    is_online: bool = False
+    version: str = ""
 
 
 class GeoCountry(BaseModel):

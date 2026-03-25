@@ -98,11 +98,11 @@ class TestMonitors:
         # Create
         monitor = self.client.monitors.create(
             self.team_id,
-            CreateMonitorParams(name=name, url="https://example.com"),
+            CreateMonitorParams(name=name, url="https://www.google.com", check_interval_ms=30000),
         )
         assert monitor.id
         assert monitor.name == name
-        assert monitor.url == "https://example.com"
+        assert monitor.url == "https://www.google.com"
         monitor_id = monitor.id
 
         # Read
@@ -117,7 +117,7 @@ class TestMonitors:
         updated = self.client.monitors.update(
             self.team_id,
             monitor_id,
-            CreateMonitorParams(name=f"{name}-updated", url="https://example.com"),
+            CreateMonitorParams(name=f"{name}-updated", url="https://www.google.com", check_interval_ms=30000),
         )
         assert updated.name == f"{name}-updated"
 
@@ -131,7 +131,7 @@ class TestMonitors:
         # Duplicate
         dup = self.client.monitors.duplicate(self.team_id, monitor_id)
         assert dup.id != monitor_id
-        assert dup.url == "https://example.com"
+        assert dup.url == "https://www.google.com"
         self.client.monitors.delete(self.team_id, dup.id)
 
         # Delete
@@ -163,7 +163,7 @@ class TestAlertChannels:
             CreateAlertChannelParams(
                 type="webhook",
                 name=name,
-                config={"url": "https://httpbin.org/post"},
+                config={"url": "https://webhook.site/test"},
             ),
         )
         assert ch.id
@@ -203,7 +203,7 @@ class TestAccounts:
 
         # Subscription
         sub = client.accounts.get_subscription(ACCOUNT_ID)
-        assert sub.account_id == ACCOUNT_ID
+        assert sub.plan
 
 
 # ---------------------------------------------------------------------------
@@ -219,7 +219,7 @@ class TestMetrics:
         self.team_id = self.team.id
         self.monitor = client.monitors.create(
             self.team_id,
-            CreateMonitorParams(name=f"py-acc-metrics-mon-{unique}", url="https://example.com"),
+            CreateMonitorParams(name=f"py-acc-metrics-mon-{unique}", url="https://www.google.com", check_interval_ms=30000),
         )
         self.monitor_id = self.monitor.id
         yield
@@ -228,7 +228,7 @@ class TestMetrics:
 
     def test_monitor_metrics(self) -> None:
         metrics = self.client.metrics.get_monitor_metrics(self.team_id, self.monitor_id)
-        assert metrics.last_24h is not None
+        assert metrics.monitor_id
 
     def test_expiration(self) -> None:
         exp = self.client.metrics.get_expiration(self.team_id, self.monitor_id)
@@ -300,14 +300,14 @@ class TestMonitorAlertChannelLink:
         self.team_id = self.team.id
         self.monitor = client.monitors.create(
             self.team_id,
-            CreateMonitorParams(name=f"py-acc-link-mon-{unique}", url="https://example.com"),
+            CreateMonitorParams(name=f"py-acc-link-mon-{unique}", url="https://www.google.com", check_interval_ms=30000),
         )
         self.monitor_id = self.monitor.id
         from oack.types.alert_channels import CreateAlertChannelParams
 
         self.channel = client.alert_channels.create(
             self.team_id,
-            CreateAlertChannelParams(type="webhook", name=f"py-acc-link-ch-{unique}", config={"url": "https://httpbin.org/post"}),
+            CreateAlertChannelParams(type="webhook", name=f"py-acc-link-ch-{unique}", config={"url": "https://webhook.site/test"}),
         )
         self.channel_id = self.channel.id
         yield
@@ -353,7 +353,7 @@ class TestStatusPages:
         self.team_id = self.team.id
         self.monitor = client.monitors.create(
             self.team_id,
-            CreateMonitorParams(name=f"py-acc-sp-mon-{unique}", url="https://example.com"),
+            CreateMonitorParams(name=f"py-acc-sp-mon-{unique}", url="https://www.google.com", check_interval_ms=30000),
         )
         self.monitor_id = self.monitor.id
         yield
@@ -366,10 +366,10 @@ class TestStatusPages:
         # --- Status Page ---
         page = self.client.status_pages.create(
             ACCOUNT_ID,
-            {"name": f"py-acc-page-{u}", "slug": f"py-acc-{u}"},
+            {"name": f"py-acc-page-{u}", "slug": f"py-acc-{u}-status"},
         )
         assert page.id
-        assert page.slug == f"py-acc-{u}"
+        assert page.slug == f"py-acc-{u}-status"
         page_id = page.id
 
         try:
@@ -381,7 +381,7 @@ class TestStatusPages:
 
             updated = self.client.status_pages.update(
                 ACCOUNT_ID, page_id,
-                {"name": f"py-acc-page-{u}-updated", "slug": f"py-acc-{u}"},
+                {"name": f"py-acc-page-{u}-updated", "slug": f"py-acc-{u}-status"},
             )
             assert updated.name == f"py-acc-page-{u}-updated"
 
@@ -423,7 +423,7 @@ class TestStatusPages:
             # --- Incident ---
             incident = self.client.status_pages.create_incident(
                 ACCOUNT_ID, page_id,
-                {"title": f"py-acc-incident-{u}", "message": "Test incident", "severity": "minor"},
+                {"name": f"py-acc-incident-{u}", "message": "Test incident", "severity": "minor"},
             )
             assert incident.id
             incident_id = incident.id
@@ -432,14 +432,14 @@ class TestStatusPages:
             assert any(i.id == incident_id for i in incidents)
 
             fetched_inc = self.client.status_pages.get_incident(ACCOUNT_ID, page_id, incident_id)
-            assert fetched_inc.title == f"py-acc-incident-{u}"
+            assert fetched_inc.name == f"py-acc-incident-{u}"
 
             self.client.status_pages.delete_incident(ACCOUNT_ID, page_id, incident_id)
 
             # --- Maintenance ---
             maint = self.client.status_pages.create_maintenance(
                 ACCOUNT_ID, page_id,
-                {"title": f"py-acc-maint-{u}", "message": "Test maintenance", "scheduled_at": "2099-01-01T00:00:00Z"},
+                {"name": f"py-acc-maint-{u}", "message": "Test maintenance", "scheduled_start": "2099-01-01T00:00:00Z", "scheduled_end": "2099-01-02T00:00:00Z", "scheduled_duration_minutes": 60},
             )
             assert maint.id
             maint_id = maint.id
@@ -452,7 +452,7 @@ class TestStatusPages:
             # --- Incident Template ---
             tmpl = self.client.status_pages.create_incident_template(
                 ACCOUNT_ID, page_id,
-                {"name": f"py-acc-tmpl-{u}", "message": "Template body", "severity": "minor"},
+                {"title": f"py-acc-tmpl-{u}", "name": f"py-acc-tmpl-{u}", "message": "Template body", "severity": "minor"},
             )
             assert tmpl.id
             tmpl_id = tmpl.id
@@ -517,7 +517,7 @@ class TestMonitorFullFields:
             self.team_id,
             CreateMonitorParams(
                 name=f"py-acc-full-{unique}",
-                url="https://example.com/health",
+                url="https://www.google.com",
                 check_interval_ms=60000,
                 timeout_ms=10000,
                 http_method="GET",

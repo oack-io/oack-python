@@ -38,10 +38,6 @@ class AccountInvite(BaseModel):
 
 
 class Subscription(BaseModel):
-    id: str
-    account_id: str
     plan: str
-    status: str
-    expires_at: str | None = None
-    created_at: str
-    updated_at: str
+    subscription_status: str = ""
+    founding_member: bool = False

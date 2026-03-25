@@ -2,44 +2,52 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 
-class WindowMetrics(BaseModel):
-    uptime: float
-    avg_response_ms: float
-    p95_response_ms: float
-    total_probes: int
-    success_probes: int
-    failure_probes: int
+class MetricsWindow(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    window_days: int
+    from_ts: str | None = Field(None, alias="from")
+    to: str | None = None
+    uptime_percent: float = 0
+    mtbf_seconds: float | None = None
+    mttr_seconds: float | None = None
+    total_uptime_seconds: int = 0
+    total_downtime_seconds: int = 0
+    total_excluded_seconds: int = 0
+    incident_count: int = 0
+    recovery_count: int = 0
 
 
 class MonitorMetrics(BaseModel):
-    last_24h: WindowMetrics
-    last_7d: WindowMetrics
-    last_30d: WindowMetrics
+    monitor_id: str = ""
+    current_health: str = ""
+    uptime_threshold_good: float = 0
+    uptime_threshold_degraded: float = 0
+    uptime_threshold_critical: float = 0
+    windows: list[MetricsWindow] = []
 
 
 class ExpirationSSL(BaseModel):
     expires_at: str | None = None
-    issuer: str
-    subject: str
-    days_left: int | None = None
-    status: str
-    checked_at: str | None = None
+    days_remaining: int | None = None
+    issuer: str = ""
+    error: str | None = None
 
 
 class ExpirationDomain(BaseModel):
     expires_at: str | None = None
-    registrar: str
-    days_left: int | None = None
-    status: str
-    checked_at: str | None = None
+    days_remaining: int | None = None
+    registrar: str = ""
+    error: str | None = None
 
 
 class Expiration(BaseModel):
+    domain: str = ""
     ssl: ExpirationSSL | None = None
-    domain: ExpirationDomain | None = None
+    domain_registration: ExpirationDomain | None = None
 
 
 class TimelineEvent(BaseModel):
