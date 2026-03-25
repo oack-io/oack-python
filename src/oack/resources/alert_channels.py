@@ -31,11 +31,13 @@ class AsyncAlertChannels:
             if ch.id == channel_id:
                 return ch
         from oack._exceptions import NotFoundError
+
         raise NotFoundError("alert channel not found")
 
     async def update(self, team_id: str, channel_id: str, params: CreateAlertChannelParams) -> AlertChannel:
         resp = await self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/alert-channels/{channel_id}",
+            "PUT",
+            f"/api/v1/teams/{team_id}/alert-channels/{channel_id}",
             json=params.model_dump(exclude_none=True),
         )
         return AlertChannel.model_validate_json(resp)
@@ -47,22 +49,19 @@ class AsyncAlertChannels:
         await self._client.request("POST", f"/api/v1/teams/{team_id}/alert-channels/{channel_id}/test")
 
     async def list_monitor_channels(self, team_id: str, monitor_id: str) -> list[str]:
-        resp = await self._client.request(
-            "GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels"
-        )
+        resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels")
         return json.loads(resp).get("channel_ids", [])  # type: ignore[no-any-return]
 
     async def set_monitor_channels(self, team_id: str, monitor_id: str, channel_ids: list[str]) -> list[str]:
         resp = await self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels",
+            "PUT",
+            f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels",
             json={"channel_ids": channel_ids},
         )
         return json.loads(resp).get("channel_ids", [])  # type: ignore[no-any-return]
 
     async def link_monitor_channel(self, team_id: str, monitor_id: str, channel_id: str) -> None:
-        await self._client.request(
-            "POST", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels/{channel_id}"
-        )
+        await self._client.request("POST", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels/{channel_id}")
 
     async def unlink_monitor_channel(self, team_id: str, monitor_id: str, channel_id: str) -> None:
         await self._client.request(
@@ -70,9 +69,7 @@ class AsyncAlertChannels:
         )
 
     async def list_events(self, team_id: str, monitor_id: str) -> list[AlertEvent]:
-        resp = await self._client.request(
-            "GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-events"
-        )
+        resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-events")
         return [AlertEvent.model_validate(e) for e in json.loads(resp)]
 
 
@@ -96,11 +93,13 @@ class AlertChannels:
             if ch.id == channel_id:
                 return ch
         from oack._exceptions import NotFoundError
+
         raise NotFoundError("alert channel not found")
 
     def update(self, team_id: str, channel_id: str, params: CreateAlertChannelParams) -> AlertChannel:
         resp = self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/alert-channels/{channel_id}",
+            "PUT",
+            f"/api/v1/teams/{team_id}/alert-channels/{channel_id}",
             json=params.model_dump(exclude_none=True),
         )
         return AlertChannel.model_validate_json(resp)
@@ -117,20 +116,17 @@ class AlertChannels:
 
     def set_monitor_channels(self, team_id: str, monitor_id: str, channel_ids: list[str]) -> list[str]:
         resp = self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels",
+            "PUT",
+            f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels",
             json={"channel_ids": channel_ids},
         )
         return json.loads(resp).get("channel_ids", [])  # type: ignore[no-any-return]
 
     def link_monitor_channel(self, team_id: str, monitor_id: str, channel_id: str) -> None:
-        self._client.request(
-            "POST", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels/{channel_id}"
-        )
+        self._client.request("POST", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels/{channel_id}")
 
     def unlink_monitor_channel(self, team_id: str, monitor_id: str, channel_id: str) -> None:
-        self._client.request(
-            "DELETE", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels/{channel_id}"
-        )
+        self._client.request("DELETE", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-channels/{channel_id}")
 
     def list_events(self, team_id: str, monitor_id: str) -> list[AlertEvent]:
         resp = self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/alert-events")

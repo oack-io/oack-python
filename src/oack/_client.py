@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import random
 import time
-from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 import httpx
 
@@ -66,7 +68,11 @@ class AsyncBaseClient:
         for attempt in range(1 + self._max_retries):
             try:
                 resp = await self._client.request(
-                    method, url, json=json, params=params, headers=headers,
+                    method,
+                    url,
+                    json=json,
+                    params=params,
+                    headers=headers,
                 )
             except httpx.TransportError as exc:
                 last_exc = exc
@@ -86,6 +92,7 @@ class AsyncBaseClient:
             ):
                 delay = retry_after if retry_after and retry_after > 0 else self._backoff_delay(attempt)
                 import asyncio
+
                 await asyncio.sleep(delay)
                 continue
 
@@ -113,6 +120,7 @@ class AsyncBaseClient:
     @staticmethod
     async def _backoff(attempt: int) -> None:
         import asyncio
+
         delay = min(0.5 * (2**attempt) + random.uniform(0, 0.25), 30.0)  # noqa: S311
         await asyncio.sleep(delay)
 
@@ -175,7 +183,11 @@ class BaseClient:
         for attempt in range(1 + self._max_retries):
             try:
                 resp = self._client.request(
-                    method, url, json=json, params=params, headers=headers,
+                    method,
+                    url,
+                    json=json,
+                    params=params,
+                    headers=headers,
                 )
             except httpx.TransportError as exc:
                 last_exc = exc

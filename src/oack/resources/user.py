@@ -28,9 +28,7 @@ class AsyncUser:
         return Preferences.model_validate_json(resp)
 
     async def register_device(self, token: str, platform: str) -> Device:
-        resp = await self._client.request(
-            "POST", "/api/v1/me/devices", json={"token": token, "platform": platform}
-        )
+        resp = await self._client.request("POST", "/api/v1/me/devices", json={"token": token, "platform": platform})
         return Device.model_validate_json(resp)
 
     async def list_devices(self) -> list[Device]:
@@ -49,11 +47,8 @@ class AsyncUser:
         return TelegramLinkStatus.model_validate_json(resp)
 
 
-class User_:
-    """Sync user resource.
-
-    Named User_ to avoid collision with the User type.
-    """
+class SyncUser:
+    """Sync user resource."""
 
     def __init__(self, client: BaseClient) -> None:
         self._client = client
@@ -71,9 +66,7 @@ class User_:
         return Preferences.model_validate_json(resp)
 
     def register_device(self, token: str, platform: str) -> Device:
-        resp = self._client.request(
-            "POST", "/api/v1/me/devices", json={"token": token, "platform": platform}
-        )
+        resp = self._client.request("POST", "/api/v1/me/devices", json={"token": token, "platform": platform})
         return Device.model_validate_json(resp)
 
     def list_devices(self) -> list[Device]:

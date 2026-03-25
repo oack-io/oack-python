@@ -16,7 +16,9 @@ def _probe_path(team_id: str, monitor_id: str) -> str:
 
 
 def _build_list_params(
-    limit: int | None = None, offset: int | None = None, is_up: bool | None = None,
+    limit: int | None = None,
+    offset: int | None = None,
+    is_up: bool | None = None,
 ) -> dict[str, str]:
     params: dict[str, str] = {}
     if limit is not None:
@@ -33,8 +35,13 @@ class AsyncProbes:
         self._client = client
 
     async def list(
-        self, team_id: str, monitor_id: str,
-        *, limit: int | None = None, offset: int | None = None, is_up: bool | None = None,
+        self,
+        team_id: str,
+        monitor_id: str,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        is_up: bool | None = None,
     ) -> ProbeList:
         params = _build_list_params(limit, offset, is_up)
         resp = await self._client.request("GET", _probe_path(team_id, monitor_id), params=params or None)
@@ -52,8 +59,14 @@ class AsyncProbes:
         return await self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/{probe_id}/pcap")
 
     async def aggregate(
-        self, team_id: str, monitor_id: str,
-        *, from_ts: int, to_ts: int, step: str, agg: str,
+        self,
+        team_id: str,
+        monitor_id: str,
+        *,
+        from_ts: int,
+        to_ts: int,
+        step: str,
+        agg: str,
     ) -> ProbeAggregation:
         params = {"from": str(from_ts), "to": str(to_ts), "step": step, "agg": agg}
         resp = await self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/aggregate", params=params)
@@ -65,8 +78,13 @@ class Probes:
         self._client = client
 
     def list(
-        self, team_id: str, monitor_id: str,
-        *, limit: int | None = None, offset: int | None = None, is_up: bool | None = None,
+        self,
+        team_id: str,
+        monitor_id: str,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        is_up: bool | None = None,
     ) -> ProbeList:
         params = _build_list_params(limit, offset, is_up)
         resp = self._client.request("GET", _probe_path(team_id, monitor_id), params=params or None)
@@ -84,8 +102,14 @@ class Probes:
         return self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/{probe_id}/pcap")
 
     def aggregate(
-        self, team_id: str, monitor_id: str,
-        *, from_ts: int, to_ts: int, step: str, agg: str,
+        self,
+        team_id: str,
+        monitor_id: str,
+        *,
+        from_ts: int,
+        to_ts: int,
+        step: str,
+        agg: str,
     ) -> ProbeAggregation:
         params = {"from": str(from_ts), "to": str(to_ts), "step": step, "agg": agg}
         resp = self._client.request("GET", f"{_probe_path(team_id, monitor_id)}/aggregate", params=params)

@@ -38,9 +38,7 @@ class AsyncAccounts:
         return Account.model_validate_json(resp)
 
     async def transfer(self, account_id: str, user_id: str) -> Account:
-        resp = await self._client.request(
-            "POST", f"/api/v1/accounts/{account_id}/transfer", json={"user_id": user_id}
-        )
+        resp = await self._client.request("POST", f"/api/v1/accounts/{account_id}/transfer", json={"user_id": user_id})
         return Account.model_validate_json(resp)
 
     async def list_members(self, account_id: str) -> list[AccountMember]:
@@ -108,9 +106,7 @@ class Accounts:
         return Account.model_validate_json(resp)
 
     def transfer(self, account_id: str, user_id: str) -> Account:
-        resp = self._client.request(
-            "POST", f"/api/v1/accounts/{account_id}/transfer", json={"user_id": user_id}
-        )
+        resp = self._client.request("POST", f"/api/v1/accounts/{account_id}/transfer", json={"user_id": user_id})
         return Account.model_validate_json(resp)
 
     def list_members(self, account_id: str) -> list[AccountMember]:
@@ -118,9 +114,7 @@ class Accounts:
         return [AccountMember.model_validate(m) for m in _parse_list(resp)]
 
     def set_member_role(self, account_id: str, user_id: str, role: str) -> AccountMember:
-        resp = self._client.request(
-            "PUT", f"/api/v1/accounts/{account_id}/members/{user_id}/role", json={"role": role}
-        )
+        resp = self._client.request("PUT", f"/api/v1/accounts/{account_id}/members/{user_id}/role", json={"role": role})
         return AccountMember.model_validate_json(resp)
 
     def remove_member(self, account_id: str, user_id: str) -> None:
@@ -152,4 +146,5 @@ class Accounts:
 
 def _parse_list(resp: bytes) -> list[dict]:  # type: ignore[type-arg]
     import json
+
     return json.loads(resp)  # type: ignore[no-any-return]

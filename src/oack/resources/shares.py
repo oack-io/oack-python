@@ -19,9 +19,7 @@ class AsyncShares:
     def __init__(self, client: AsyncBaseClient) -> None:
         self._client = client
 
-    async def create(
-        self, team_id: str, monitor_id: str, expires_at: str | None = None
-    ) -> Share:
+    async def create(self, team_id: str, monitor_id: str, expires_at: str | None = None) -> Share:
         body: dict[str, Any] = {}
         if expires_at is not None:
             body["expires_at"] = expires_at
@@ -33,9 +31,7 @@ class AsyncShares:
         return [Share.model_validate(s) for s in json.loads(resp)]
 
     async def revoke(self, team_id: str, monitor_id: str, share_id: str) -> None:
-        await self._client.request(
-            "DELETE", _shares_path(team_id, monitor_id) + f"/{share_id}"
-        )
+        await self._client.request("DELETE", _shares_path(team_id, monitor_id) + f"/{share_id}")
 
 
 class Shares:

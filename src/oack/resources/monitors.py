@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from oack.types.monitors import CreateMonitorParams, Monitor
 
@@ -20,9 +20,7 @@ class AsyncMonitors:
         self._client = client
 
     async def create(self, team_id: str, params: CreateMonitorParams) -> Monitor:
-        resp = await self._client.request(
-            "POST", f"/api/v1/teams/{team_id}/monitors", json=params.to_request_body()
-        )
+        resp = await self._client.request("POST", f"/api/v1/teams/{team_id}/monitors", json=params.to_request_body())
         return Monitor.model_validate_json(resp)
 
     async def list(self, team_id: str) -> list[Monitor]:
@@ -34,9 +32,7 @@ class AsyncMonitors:
         return Monitor.model_validate_json(resp)
 
     async def update(self, team_id: str, monitor_id: str, params: CreateMonitorParams) -> Monitor:
-        resp = await self._client.request(
-            "PUT", _monitor_path(team_id, monitor_id), json=params.to_request_body()
-        )
+        resp = await self._client.request("PUT", _monitor_path(team_id, monitor_id), json=params.to_request_body())
         return Monitor.model_validate_json(resp)
 
     async def delete(self, team_id: str, monitor_id: str) -> None:

@@ -20,9 +20,7 @@ class AsyncCFLogs:
         self._client = client
 
     async def get(self, team_id: str, monitor_id: str, probe_id: str) -> CFLogEntry:
-        resp = await self._client.request(
-            "GET", _monitor_path(team_id, monitor_id) + f"/probes/{probe_id}/cf-log"
-        )
+        resp = await self._client.request("GET", _monitor_path(team_id, monitor_id) + f"/probes/{probe_id}/cf-log")
         return CFLogEntry.model_validate_json(resp)
 
     async def list(
@@ -40,9 +38,7 @@ class AsyncCFLogs:
             params["to"] = to_ts
         if limit is not None:
             params["limit"] = limit
-        resp = await self._client.request(
-            "GET", _monitor_path(team_id, monitor_id) + "/cf-logs", params=params
-        )
+        resp = await self._client.request("GET", _monitor_path(team_id, monitor_id) + "/cf-logs", params=params)
         return [CFLogEntry.model_validate(e) for e in json.loads(resp)]
 
 
@@ -51,9 +47,7 @@ class CFLogs:
         self._client = client
 
     def get(self, team_id: str, monitor_id: str, probe_id: str) -> CFLogEntry:
-        resp = self._client.request(
-            "GET", _monitor_path(team_id, monitor_id) + f"/probes/{probe_id}/cf-log"
-        )
+        resp = self._client.request("GET", _monitor_path(team_id, monitor_id) + f"/probes/{probe_id}/cf-log")
         return CFLogEntry.model_validate_json(resp)
 
     def list(
@@ -71,7 +65,5 @@ class CFLogs:
             params["to"] = to_ts
         if limit is not None:
             params["limit"] = limit
-        resp = self._client.request(
-            "GET", _monitor_path(team_id, monitor_id) + "/cf-logs", params=params
-        )
+        resp = self._client.request("GET", _monitor_path(team_id, monitor_id) + "/cf-logs", params=params)
         return [CFLogEntry.model_validate(e) for e in json.loads(resp)]

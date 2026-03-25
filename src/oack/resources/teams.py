@@ -52,9 +52,7 @@ class AsyncTeams:
         await self._client.request("DELETE", f"/api/v1/teams/{team_id}/members/{user_id}")
 
     async def set_member_role(self, team_id: str, user_id: str, role: str) -> None:
-        await self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/members/{user_id}/role", json={"role": role}
-        )
+        await self._client.request("PUT", f"/api/v1/teams/{team_id}/members/{user_id}/role", json={"role": role})
 
     async def list_invites(self, team_id: str) -> list[TeamInvite]:
         resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/invites")
@@ -118,9 +116,7 @@ class Teams:
         return [TeamMember.model_validate(m) for m in json.loads(resp)]
 
     def add_member(self, team_id: str, user_id: str, role: str) -> TeamMember:
-        resp = self._client.request(
-            "POST", f"/api/v1/teams/{team_id}/members", json={"user_id": user_id, "role": role}
-        )
+        resp = self._client.request("POST", f"/api/v1/teams/{team_id}/members", json={"user_id": user_id, "role": role})
         return TeamMember.model_validate_json(resp)
 
     def remove_member(self, team_id: str, user_id: str) -> None:

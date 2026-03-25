@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
 from oack.types.notifications import MonitorNotification, NotificationDefaults
@@ -16,14 +15,10 @@ class AsyncNotifications:
         self._client = client
 
     async def get_defaults(self, account_id: str) -> NotificationDefaults:
-        resp = await self._client.request(
-            "GET", f"/api/v1/me/accounts/{account_id}/notification-defaults"
-        )
+        resp = await self._client.request("GET", f"/api/v1/me/accounts/{account_id}/notification-defaults")
         return NotificationDefaults.model_validate_json(resp)
 
-    async def set_defaults(
-        self, account_id: str, channel_ids: list[str]
-    ) -> NotificationDefaults:
+    async def set_defaults(self, account_id: str, channel_ids: list[str]) -> NotificationDefaults:
         resp = await self._client.request(
             "PUT",
             f"/api/v1/me/accounts/{account_id}/notification-defaults",
@@ -39,14 +34,10 @@ class AsyncNotifications:
         )
 
     async def get_monitor(self, team_id: str, monitor_id: str) -> MonitorNotification:
-        resp = await self._client.request(
-            "GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications"
-        )
+        resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications")
         return MonitorNotification.model_validate_json(resp)
 
-    async def set_monitor(
-        self, team_id: str, monitor_id: str, channel_ids: list[str]
-    ) -> MonitorNotification:
+    async def set_monitor(self, team_id: str, monitor_id: str, channel_ids: list[str]) -> MonitorNotification:
         resp = await self._client.request(
             "PUT",
             f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications",
@@ -55,9 +46,7 @@ class AsyncNotifications:
         return MonitorNotification.model_validate_json(resp)
 
     async def remove_monitor(self, team_id: str, monitor_id: str) -> None:
-        await self._client.request(
-            "DELETE", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications"
-        )
+        await self._client.request("DELETE", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications")
 
 
 class Notifications:
@@ -65,9 +54,7 @@ class Notifications:
         self._client = client
 
     def get_defaults(self, account_id: str) -> NotificationDefaults:
-        resp = self._client.request(
-            "GET", f"/api/v1/me/accounts/{account_id}/notification-defaults"
-        )
+        resp = self._client.request("GET", f"/api/v1/me/accounts/{account_id}/notification-defaults")
         return NotificationDefaults.model_validate_json(resp)
 
     def set_defaults(self, account_id: str, channel_ids: list[str]) -> NotificationDefaults:
@@ -86,14 +73,10 @@ class Notifications:
         )
 
     def get_monitor(self, team_id: str, monitor_id: str) -> MonitorNotification:
-        resp = self._client.request(
-            "GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications"
-        )
+        resp = self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications")
         return MonitorNotification.model_validate_json(resp)
 
-    def set_monitor(
-        self, team_id: str, monitor_id: str, channel_ids: list[str]
-    ) -> MonitorNotification:
+    def set_monitor(self, team_id: str, monitor_id: str, channel_ids: list[str]) -> MonitorNotification:
         resp = self._client.request(
             "PUT",
             f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications",
@@ -102,6 +85,4 @@ class Notifications:
         return MonitorNotification.model_validate_json(resp)
 
     def remove_monitor(self, team_id: str, monitor_id: str) -> None:
-        self._client.request(
-            "DELETE", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications"
-        )
+        self._client.request("DELETE", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/my/notifications")

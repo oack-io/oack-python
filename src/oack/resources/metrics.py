@@ -31,7 +31,12 @@ class AsyncMetrics:
         return Expiration.model_validate_json(resp)
 
     async def list_timeline(
-        self, team_id: str, monitor_id: str, *, limit: int | None = None, offset: int | None = None,
+        self,
+        team_id: str,
+        monitor_id: str,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
     ) -> list[TimelineEvent]:
         params: dict[str, str] = {}
         if limit is not None:
@@ -76,7 +81,12 @@ class Metrics:
         return Expiration.model_validate_json(resp)
 
     def list_timeline(
-        self, team_id: str, monitor_id: str, *, limit: int | None = None, offset: int | None = None,
+        self,
+        team_id: str,
+        monitor_id: str,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
     ) -> list[TimelineEvent]:
         params: dict[str, str] = {}
         if limit is not None:

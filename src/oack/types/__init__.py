@@ -39,10 +39,10 @@ from oack.types.traces import Trace
 from oack.types.user import Device, Preferences, TelegramLink, TelegramLinkStatus, User
 
 __all__ = [
+    "AcceptInviteResult",
     "Account",
     "AccountInvite",
     "AccountMember",
-    "AcceptInviteResult",
     "AlertChannel",
     "AlertEvent",
     "CFIntegration",

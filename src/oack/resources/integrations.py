@@ -18,32 +18,22 @@ class AsyncIntegrations:
     # --- PagerDuty ---
 
     async def create_pagerduty(self, account_id: str, params: dict) -> PDIntegration:
-        resp = await self._client.request(
-            "POST", f"/api/v1/accounts/{account_id}/integrations/pagerduty", json=params
-        )
+        resp = await self._client.request("POST", f"/api/v1/accounts/{account_id}/integrations/pagerduty", json=params)
         return PDIntegration.model_validate_json(resp)
 
     async def get_pagerduty(self, account_id: str) -> PDIntegration:
-        resp = await self._client.request(
-            "GET", f"/api/v1/accounts/{account_id}/integrations/pagerduty"
-        )
+        resp = await self._client.request("GET", f"/api/v1/accounts/{account_id}/integrations/pagerduty")
         return PDIntegration.model_validate_json(resp)
 
     async def update_pagerduty(self, account_id: str, params: dict) -> PDIntegration:
-        resp = await self._client.request(
-            "PUT", f"/api/v1/accounts/{account_id}/integrations/pagerduty", json=params
-        )
+        resp = await self._client.request("PUT", f"/api/v1/accounts/{account_id}/integrations/pagerduty", json=params)
         return PDIntegration.model_validate_json(resp)
 
     async def delete_pagerduty(self, account_id: str) -> None:
-        await self._client.request(
-            "DELETE", f"/api/v1/accounts/{account_id}/integrations/pagerduty"
-        )
+        await self._client.request("DELETE", f"/api/v1/accounts/{account_id}/integrations/pagerduty")
 
     async def sync_pagerduty(self, account_id: str) -> PDIntegration:
-        resp = await self._client.request(
-            "POST", f"/api/v1/accounts/{account_id}/integrations/pagerduty/sync"
-        )
+        resp = await self._client.request("POST", f"/api/v1/accounts/{account_id}/integrations/pagerduty/sync")
         return PDIntegration.model_validate_json(resp)
 
     # --- Cloudflare ---
@@ -55,14 +45,10 @@ class AsyncIntegrations:
         return CFIntegration.model_validate_json(resp)
 
     async def list_cloudflare(self, account_id: str) -> list[CFIntegration]:
-        resp = await self._client.request(
-            "GET", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone"
-        )
+        resp = await self._client.request("GET", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone")
         return [CFIntegration.model_validate(c) for c in json.loads(resp)]
 
-    async def update_cloudflare(
-        self, account_id: str, cf_id: str, api_token: str
-    ) -> CFIntegration:
+    async def update_cloudflare(self, account_id: str, cf_id: str, api_token: str) -> CFIntegration:
         resp = await self._client.request(
             "PUT",
             f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone/{cf_id}",
@@ -71,9 +57,7 @@ class AsyncIntegrations:
         return CFIntegration.model_validate_json(resp)
 
     async def delete_cloudflare(self, account_id: str, cf_id: str) -> None:
-        await self._client.request(
-            "DELETE", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone/{cf_id}"
-        )
+        await self._client.request("DELETE", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone/{cf_id}")
 
 
 class Integrations:
@@ -83,46 +67,32 @@ class Integrations:
     # --- PagerDuty ---
 
     def create_pagerduty(self, account_id: str, params: dict) -> PDIntegration:
-        resp = self._client.request(
-            "POST", f"/api/v1/accounts/{account_id}/integrations/pagerduty", json=params
-        )
+        resp = self._client.request("POST", f"/api/v1/accounts/{account_id}/integrations/pagerduty", json=params)
         return PDIntegration.model_validate_json(resp)
 
     def get_pagerduty(self, account_id: str) -> PDIntegration:
-        resp = self._client.request(
-            "GET", f"/api/v1/accounts/{account_id}/integrations/pagerduty"
-        )
+        resp = self._client.request("GET", f"/api/v1/accounts/{account_id}/integrations/pagerduty")
         return PDIntegration.model_validate_json(resp)
 
     def update_pagerduty(self, account_id: str, params: dict) -> PDIntegration:
-        resp = self._client.request(
-            "PUT", f"/api/v1/accounts/{account_id}/integrations/pagerduty", json=params
-        )
+        resp = self._client.request("PUT", f"/api/v1/accounts/{account_id}/integrations/pagerduty", json=params)
         return PDIntegration.model_validate_json(resp)
 
     def delete_pagerduty(self, account_id: str) -> None:
-        self._client.request(
-            "DELETE", f"/api/v1/accounts/{account_id}/integrations/pagerduty"
-        )
+        self._client.request("DELETE", f"/api/v1/accounts/{account_id}/integrations/pagerduty")
 
     def sync_pagerduty(self, account_id: str) -> PDIntegration:
-        resp = self._client.request(
-            "POST", f"/api/v1/accounts/{account_id}/integrations/pagerduty/sync"
-        )
+        resp = self._client.request("POST", f"/api/v1/accounts/{account_id}/integrations/pagerduty/sync")
         return PDIntegration.model_validate_json(resp)
 
     # --- Cloudflare ---
 
     def create_cloudflare(self, account_id: str, params: dict) -> CFIntegration:
-        resp = self._client.request(
-            "POST", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone", json=params
-        )
+        resp = self._client.request("POST", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone", json=params)
         return CFIntegration.model_validate_json(resp)
 
     def list_cloudflare(self, account_id: str) -> list[CFIntegration]:
-        resp = self._client.request(
-            "GET", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone"
-        )
+        resp = self._client.request("GET", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone")
         return [CFIntegration.model_validate(c) for c in json.loads(resp)]
 
     def update_cloudflare(self, account_id: str, cf_id: str, api_token: str) -> CFIntegration:
@@ -134,6 +104,4 @@ class Integrations:
         return CFIntegration.model_validate_json(resp)
 
     def delete_cloudflare(self, account_id: str, cf_id: str) -> None:
-        self._client.request(
-            "DELETE", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone/{cf_id}"
-        )
+        self._client.request("DELETE", f"/api/v1/accounts/{account_id}/integrations/cloudflare-zone/{cf_id}")

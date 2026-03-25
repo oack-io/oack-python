@@ -16,25 +16,19 @@ class AsyncExternalLinks:
         self._client = client
 
     async def create(self, team_id: str, params: dict) -> ExternalLink:
-        resp = await self._client.request(
-            "POST", f"/api/v1/teams/{team_id}/external-links", json=params
-        )
+        resp = await self._client.request("POST", f"/api/v1/teams/{team_id}/external-links", json=params)
         return ExternalLink.model_validate_json(resp)
 
     async def list(self, team_id: str) -> list[ExternalLink]:
         resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/external-links")
-        return [ExternalLink.model_validate(l) for l in json.loads(resp)]
+        return [ExternalLink.model_validate(lnk) for lnk in json.loads(resp)]
 
     async def get(self, team_id: str, link_id: str) -> ExternalLink:
-        resp = await self._client.request(
-            "GET", f"/api/v1/teams/{team_id}/external-links/{link_id}"
-        )
+        resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/external-links/{link_id}")
         return ExternalLink.model_validate_json(resp)
 
     async def update(self, team_id: str, link_id: str, params: dict) -> ExternalLink:
-        resp = await self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/external-links/{link_id}", json=params
-        )
+        resp = await self._client.request("PUT", f"/api/v1/teams/{team_id}/external-links/{link_id}", json=params)
         return ExternalLink.model_validate_json(resp)
 
     async def delete(self, team_id: str, link_id: str) -> None:
@@ -53,10 +47,8 @@ class AsyncExternalLinks:
         )
 
     async def list_monitor_links(self, team_id: str, monitor_id: str) -> list[ExternalLink]:
-        resp = await self._client.request(
-            "GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/external-links"
-        )
-        return [ExternalLink.model_validate(l) for l in json.loads(resp)]
+        resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/external-links")
+        return [ExternalLink.model_validate(lnk) for lnk in json.loads(resp)]
 
 
 class ExternalLinks:
@@ -64,25 +56,19 @@ class ExternalLinks:
         self._client = client
 
     def create(self, team_id: str, params: dict) -> ExternalLink:
-        resp = self._client.request(
-            "POST", f"/api/v1/teams/{team_id}/external-links", json=params
-        )
+        resp = self._client.request("POST", f"/api/v1/teams/{team_id}/external-links", json=params)
         return ExternalLink.model_validate_json(resp)
 
     def list(self, team_id: str) -> list[ExternalLink]:
         resp = self._client.request("GET", f"/api/v1/teams/{team_id}/external-links")
-        return [ExternalLink.model_validate(l) for l in json.loads(resp)]
+        return [ExternalLink.model_validate(lnk) for lnk in json.loads(resp)]
 
     def get(self, team_id: str, link_id: str) -> ExternalLink:
-        resp = self._client.request(
-            "GET", f"/api/v1/teams/{team_id}/external-links/{link_id}"
-        )
+        resp = self._client.request("GET", f"/api/v1/teams/{team_id}/external-links/{link_id}")
         return ExternalLink.model_validate_json(resp)
 
     def update(self, team_id: str, link_id: str, params: dict) -> ExternalLink:
-        resp = self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/external-links/{link_id}", json=params
-        )
+        resp = self._client.request("PUT", f"/api/v1/teams/{team_id}/external-links/{link_id}", json=params)
         return ExternalLink.model_validate_json(resp)
 
     def delete(self, team_id: str, link_id: str) -> None:
@@ -101,7 +87,5 @@ class ExternalLinks:
         )
 
     def list_monitor_links(self, team_id: str, monitor_id: str) -> list[ExternalLink]:
-        resp = self._client.request(
-            "GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/external-links"
-        )
-        return [ExternalLink.model_validate(l) for l in json.loads(resp)]
+        resp = self._client.request("GET", f"/api/v1/teams/{team_id}/monitors/{monitor_id}/external-links")
+        return [ExternalLink.model_validate(lnk) for lnk in json.loads(resp)]

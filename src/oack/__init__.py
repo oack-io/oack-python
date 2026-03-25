@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 from oack._client import AsyncBaseClient, BaseClient
 from oack._exceptions import (
@@ -30,7 +32,7 @@ from oack.resources.shares import AsyncShares, Shares
 from oack.resources.status_pages import AsyncStatusPages, StatusPages
 from oack.resources.teams import AsyncTeams, Teams
 from oack.resources.traces import AsyncTraces, Traces
-from oack.resources.user import AsyncUser, User_ as SyncUser
+from oack.resources.user import AsyncUser, SyncUser
 
 __version__ = "0.1.0"
 
@@ -54,8 +56,11 @@ class AsyncOack:
         max_retries: int = 2,
     ) -> None:
         self._client = AsyncBaseClient(
-            api_key=api_key, api_key_func=api_key_func,
-            base_url=base_url, timeout=timeout, max_retries=max_retries,
+            api_key=api_key,
+            api_key_func=api_key_func,
+            base_url=base_url,
+            timeout=timeout,
+            max_retries=max_retries,
         )
         self.accounts = AsyncAccounts(self._client)
         self.teams = AsyncTeams(self._client)
@@ -103,8 +108,11 @@ class Oack:
         max_retries: int = 2,
     ) -> None:
         self._client = BaseClient(
-            api_key=api_key, api_key_func=api_key_func,
-            base_url=base_url, timeout=timeout, max_retries=max_retries,
+            api_key=api_key,
+            api_key_func=api_key_func,
+            base_url=base_url,
+            timeout=timeout,
+            max_retries=max_retries,
         )
         self.accounts = Accounts(self._client)
         self.teams = Teams(self._client)
@@ -134,14 +142,14 @@ class Oack:
 
 
 __all__ = [
-    "__version__",
-    "AsyncOack",
-    "Oack",
     "APIError",
+    "AsyncOack",
     "AuthenticationError",
     "ConflictError",
     "ForbiddenError",
     "NotFoundError",
+    "Oack",
     "OackError",
     "RateLimitError",
+    "__version__",
 ]
