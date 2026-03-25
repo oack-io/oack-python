@@ -11,6 +11,28 @@ Official Python client for the [Oack](https://oack.io) monitoring API.
 
 ## Installation
 
+> **Note:** PyPI publishing is temporarily unavailable. Install directly from GitHub:
+
+```bash
+pip install git+https://github.com/oack-io/oack-python.git
+
+# or pin to a specific version
+pip install git+https://github.com/oack-io/oack-python.git@v0.1.0
+```
+
+In `requirements.txt`:
+```
+oack @ git+https://github.com/oack-io/oack-python.git@v0.1.0
+```
+
+In `pyproject.toml` (PEP 621):
+```toml
+dependencies = [
+    "oack @ git+https://github.com/oack-io/oack-python.git@v0.1.0",
+]
+```
+
+Once published to PyPI, the standard install will work:
 ```bash
 pip install oack
 ```
