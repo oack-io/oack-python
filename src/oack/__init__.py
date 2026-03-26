@@ -19,9 +19,8 @@ from oack._exceptions import (
     RateLimitError,
 )
 from oack.resources.accounts import Accounts, AsyncAccounts
-from oack.resources.browser_probes import AsyncBrowserProbes, BrowserProbes
-from oack.resources.watchdogs import AsyncWatchdogs, Watchdogs
 from oack.resources.alert_channels import AlertChannels, AsyncAlertChannels
+from oack.resources.browser_probes import AsyncBrowserProbes, BrowserProbes
 from oack.resources.cf_logs import AsyncCFLogs, CFLogs
 from oack.resources.comments import AsyncComments, Comments
 from oack.resources.external_links import AsyncExternalLinks, ExternalLinks
@@ -36,6 +35,7 @@ from oack.resources.status_pages import AsyncStatusPages, StatusPages
 from oack.resources.teams import AsyncTeams, Teams
 from oack.resources.traces import AsyncTraces, Traces
 from oack.resources.user import AsyncUser, SyncUser
+from oack.resources.watchdogs import AsyncWatchdogs, Watchdogs
 
 __version__ = "0.1.0"
 
