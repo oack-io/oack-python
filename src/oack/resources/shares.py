@@ -20,9 +20,7 @@ class AsyncShares:
         self._client = client
 
     async def create(self, team_id: str, monitor_id: str, params: CreateShareParams) -> Share:
-        resp = await self._client.request(
-            "POST", _shares_path(team_id, monitor_id), json=params.to_request_body()
-        )
+        resp = await self._client.request("POST", _shares_path(team_id, monitor_id), json=params.to_request_body())
         return Share.model_validate_json(resp)
 
     async def list(self, team_id: str, monitor_id: str) -> list[Share]:
@@ -38,9 +36,7 @@ class Shares:
         self._client = client
 
     def create(self, team_id: str, monitor_id: str, params: CreateShareParams) -> Share:
-        resp = self._client.request(
-            "POST", _shares_path(team_id, monitor_id), json=params.to_request_body()
-        )
+        resp = self._client.request("POST", _shares_path(team_id, monitor_id), json=params.to_request_body())
         return Share.model_validate_json(resp)
 
     def list(self, team_id: str, monitor_id: str) -> list[Share]:

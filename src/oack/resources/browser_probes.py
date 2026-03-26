@@ -34,15 +34,11 @@ class AsyncBrowserProbes:
             params["to"] = to_ts
         if limit is not None:
             params["limit"] = str(limit)
-        resp = await self._client.request(
-            "GET", _browser_probe_path(team_id, monitor_id), params=params or None
-        )
+        resp = await self._client.request("GET", _browser_probe_path(team_id, monitor_id), params=params or None)
         return BrowserProbeList.model_validate_json(resp)
 
     async def get(self, team_id: str, monitor_id: str, probe_id: str) -> BrowserProbe:
-        resp = await self._client.request(
-            "GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}"
-        )
+        resp = await self._client.request("GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}")
         return BrowserProbe.model_validate_json(resp)
 
     async def aggregate(
@@ -57,20 +53,14 @@ class AsyncBrowserProbes:
         params: dict[str, str] = {"from": from_ts, "to": to_ts}
         if step is not None:
             params["step"] = step
-        resp = await self._client.request(
-            "GET", f"{_browser_probe_path(team_id, monitor_id)}/aggregate", params=params
-        )
+        resp = await self._client.request("GET", f"{_browser_probe_path(team_id, monitor_id)}/aggregate", params=params)
         return BrowserProbeAggregation.model_validate_json(resp)
 
     async def download_screenshot(self, team_id: str, monitor_id: str, probe_id: str) -> bytes:
-        return await self._client.request(
-            "GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}/screenshot"
-        )
+        return await self._client.request("GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}/screenshot")
 
     async def download_har(self, team_id: str, monitor_id: str, probe_id: str) -> bytes:
-        return await self._client.request(
-            "GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}/har"
-        )
+        return await self._client.request("GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}/har")
 
 
 class BrowserProbes:
@@ -93,15 +83,11 @@ class BrowserProbes:
             params["to"] = to_ts
         if limit is not None:
             params["limit"] = str(limit)
-        resp = self._client.request(
-            "GET", _browser_probe_path(team_id, monitor_id), params=params or None
-        )
+        resp = self._client.request("GET", _browser_probe_path(team_id, monitor_id), params=params or None)
         return BrowserProbeList.model_validate_json(resp)
 
     def get(self, team_id: str, monitor_id: str, probe_id: str) -> BrowserProbe:
-        resp = self._client.request(
-            "GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}"
-        )
+        resp = self._client.request("GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}")
         return BrowserProbe.model_validate_json(resp)
 
     def aggregate(
@@ -116,17 +102,11 @@ class BrowserProbes:
         params: dict[str, str] = {"from": from_ts, "to": to_ts}
         if step is not None:
             params["step"] = step
-        resp = self._client.request(
-            "GET", f"{_browser_probe_path(team_id, monitor_id)}/aggregate", params=params
-        )
+        resp = self._client.request("GET", f"{_browser_probe_path(team_id, monitor_id)}/aggregate", params=params)
         return BrowserProbeAggregation.model_validate_json(resp)
 
     def download_screenshot(self, team_id: str, monitor_id: str, probe_id: str) -> bytes:
-        return self._client.request(
-            "GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}/screenshot"
-        )
+        return self._client.request("GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}/screenshot")
 
     def download_har(self, team_id: str, monitor_id: str, probe_id: str) -> bytes:
-        return self._client.request(
-            "GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}/har"
-        )
+        return self._client.request("GET", f"{_browser_probe_path(team_id, monitor_id)}/{probe_id}/har")

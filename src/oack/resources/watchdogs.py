@@ -19,9 +19,7 @@ class AsyncWatchdogs:
     def __init__(self, client: AsyncBaseClient) -> None:
         self._client = client
 
-    async def create(
-        self, account_id: str, page_id: str, comp_id: str, params: CreateWatchdogParams
-    ) -> Watchdog:
+    async def create(self, account_id: str, page_id: str, comp_id: str, params: CreateWatchdogParams) -> Watchdog:
         resp = await self._client.request(
             "POST", _watchdog_path(account_id, page_id, comp_id), json=params.model_dump(exclude_none=True)
         )
@@ -49,9 +47,7 @@ class Watchdogs:
     def __init__(self, client: BaseClient) -> None:
         self._client = client
 
-    def create(
-        self, account_id: str, page_id: str, comp_id: str, params: CreateWatchdogParams
-    ) -> Watchdog:
+    def create(self, account_id: str, page_id: str, comp_id: str, params: CreateWatchdogParams) -> Watchdog:
         resp = self._client.request(
             "POST", _watchdog_path(account_id, page_id, comp_id), json=params.model_dump(exclude_none=True)
         )
