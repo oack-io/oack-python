@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class User(BaseModel):
@@ -18,9 +18,12 @@ class User(BaseModel):
 
 
 class Preferences(BaseModel):
-    timezone: str
-    date_format: str
-    theme: str
+    model_config = ConfigDict(extra="allow")
+
+    timezone: str = ""
+    date_format: str = ""
+    time_format: str = ""
+    theme: str = ""
 
 
 class Device(BaseModel):

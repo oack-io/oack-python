@@ -41,7 +41,10 @@ class AsyncBaseClient:
         self._base_url = base_url.rstrip("/")
         self._max_retries = max_retries
         self._owns_client = http_client is None
-        self._client = http_client or httpx.AsyncClient(timeout=timeout)
+        self._client = http_client or httpx.AsyncClient(
+            timeout=timeout,
+            transport=httpx.AsyncHTTPTransport(http2=False),
+        )
 
     def _token(self) -> str:
         if self._api_key_func is not None:
@@ -156,7 +159,10 @@ class BaseClient:
         self._base_url = base_url.rstrip("/")
         self._max_retries = max_retries
         self._owns_client = http_client is None
-        self._client = http_client or httpx.Client(timeout=timeout)
+        self._client = http_client or httpx.Client(
+            timeout=timeout,
+            transport=httpx.HTTPTransport(http2=False),
+        )
 
     def _token(self) -> str:
         if self._api_key_func is not None:

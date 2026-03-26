@@ -19,6 +19,8 @@ from oack._exceptions import (
     RateLimitError,
 )
 from oack.resources.accounts import Accounts, AsyncAccounts
+from oack.resources.browser_probes import AsyncBrowserProbes, BrowserProbes
+from oack.resources.watchdogs import AsyncWatchdogs, Watchdogs
 from oack.resources.alert_channels import AlertChannels, AsyncAlertChannels
 from oack.resources.cf_logs import AsyncCFLogs, CFLogs
 from oack.resources.comments import AsyncComments, Comments
@@ -79,6 +81,8 @@ class AsyncOack:
         self.traces = AsyncTraces(self._client)
         self.user = AsyncUser(self._client)
         self.cf_logs = AsyncCFLogs(self._client)
+        self.browser_probes = AsyncBrowserProbes(self._client)
+        self.watchdogs = AsyncWatchdogs(self._client)
 
     async def close(self) -> None:
         await self._client.close()
@@ -131,6 +135,8 @@ class Oack:
         self.traces = Traces(self._client)
         self.user = SyncUser(self._client)
         self.cf_logs = CFLogs(self._client)
+        self.browser_probes = BrowserProbes(self._client)
+        self.watchdogs = Watchdogs(self._client)
 
     def close(self) -> None:
         self._client.close()

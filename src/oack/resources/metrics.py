@@ -9,6 +9,7 @@ from oack.types.metrics import (
     ChartEvent,
     CreateChartEventParams,
     Expiration,
+    IngestChartEventParams,
     MonitorMetrics,
     TimelineEvent,
     UpdateChartEventParams,
@@ -50,22 +51,44 @@ class AsyncMetrics:
 
     async def create_chart_event(self, team_id: str, params: CreateChartEventParams) -> ChartEvent:
         resp = await self._client.request(
-            "POST", f"/api/v1/teams/{team_id}/chart-events", json=params.model_dump(exclude_none=True)
+            "POST", f"/api/v1/teams/{team_id}/events", json=params.model_dump(exclude_none=True)
         )
         return ChartEvent.model_validate_json(resp)
 
-    async def list_chart_events(self, team_id: str) -> list[ChartEvent]:
-        resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/chart-events")
+    async def list_chart_events(
+        self,
+        team_id: str,
+        *,
+        from_ts: str,
+        to_ts: str,
+        monitor_id: str | None = None,
+        kind: str | None = None,
+        source: str | None = None,
+    ) -> list[ChartEvent]:
+        params: dict[str, str] = {"from": from_ts, "to": to_ts}
+        if monitor_id is not None:
+            params["monitor_id"] = monitor_id
+        if kind is not None:
+            params["kind"] = kind
+        if source is not None:
+            params["source"] = source
+        resp = await self._client.request("GET", f"/api/v1/teams/{team_id}/events", params=params)
         return [ChartEvent.model_validate(e) for e in json.loads(resp)]
 
     async def update_chart_event(self, team_id: str, event_id: str, params: UpdateChartEventParams) -> ChartEvent:
         resp = await self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/chart-events/{event_id}", json=params.model_dump(exclude_none=True)
+            "PUT", f"/api/v1/teams/{team_id}/events/{event_id}", json=params.model_dump(exclude_none=True)
         )
         return ChartEvent.model_validate_json(resp)
 
     async def delete_chart_event(self, team_id: str, event_id: str) -> None:
-        await self._client.request("DELETE", f"/api/v1/teams/{team_id}/chart-events/{event_id}")
+        await self._client.request("DELETE", f"/api/v1/teams/{team_id}/events/{event_id}")
+
+    async def ingest_chart_event(self, team_id: str, params: IngestChartEventParams) -> ChartEvent:
+        resp = await self._client.request(
+            "POST", f"/api/v1/teams/{team_id}/events/ingest", json=params.model_dump(exclude_none=True)
+        )
+        return ChartEvent.model_validate_json(resp)
 
 
 class Metrics:
@@ -100,19 +123,41 @@ class Metrics:
 
     def create_chart_event(self, team_id: str, params: CreateChartEventParams) -> ChartEvent:
         resp = self._client.request(
-            "POST", f"/api/v1/teams/{team_id}/chart-events", json=params.model_dump(exclude_none=True)
+            "POST", f"/api/v1/teams/{team_id}/events", json=params.model_dump(exclude_none=True)
         )
         return ChartEvent.model_validate_json(resp)
 
-    def list_chart_events(self, team_id: str) -> list[ChartEvent]:
-        resp = self._client.request("GET", f"/api/v1/teams/{team_id}/chart-events")
+    def list_chart_events(
+        self,
+        team_id: str,
+        *,
+        from_ts: str,
+        to_ts: str,
+        monitor_id: str | None = None,
+        kind: str | None = None,
+        source: str | None = None,
+    ) -> list[ChartEvent]:
+        params: dict[str, str] = {"from": from_ts, "to": to_ts}
+        if monitor_id is not None:
+            params["monitor_id"] = monitor_id
+        if kind is not None:
+            params["kind"] = kind
+        if source is not None:
+            params["source"] = source
+        resp = self._client.request("GET", f"/api/v1/teams/{team_id}/events", params=params)
         return [ChartEvent.model_validate(e) for e in json.loads(resp)]
 
     def update_chart_event(self, team_id: str, event_id: str, params: UpdateChartEventParams) -> ChartEvent:
         resp = self._client.request(
-            "PUT", f"/api/v1/teams/{team_id}/chart-events/{event_id}", json=params.model_dump(exclude_none=True)
+            "PUT", f"/api/v1/teams/{team_id}/events/{event_id}", json=params.model_dump(exclude_none=True)
         )
         return ChartEvent.model_validate_json(resp)
 
     def delete_chart_event(self, team_id: str, event_id: str) -> None:
-        self._client.request("DELETE", f"/api/v1/teams/{team_id}/chart-events/{event_id}")
+        self._client.request("DELETE", f"/api/v1/teams/{team_id}/events/{event_id}")
+
+    def ingest_chart_event(self, team_id: str, params: IngestChartEventParams) -> ChartEvent:
+        resp = self._client.request(
+            "POST", f"/api/v1/teams/{team_id}/events/ingest", json=params.model_dump(exclude_none=True)
+        )
+        return ChartEvent.model_validate_json(resp)

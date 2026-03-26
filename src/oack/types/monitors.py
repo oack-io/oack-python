@@ -7,6 +7,57 @@ from typing import Any
 from pydantic import BaseModel
 
 
+class BrowserStep(BaseModel):
+    action: str
+    selector: str | None = None
+    value: str | None = None
+    url: str | None = None
+    attribute: str | None = None
+    variable_name: str | None = None
+    name: str | None = None
+    timeout_ms: int | None = None
+    wait_ms: int | None = None
+
+
+class ScriptEnvVar(BaseModel):
+    key: str
+    value: str
+    secret: bool
+
+
+class BrowserConfig(BaseModel):
+    screenshot_enabled: bool = True
+    screenshot_full_page: bool = False
+    console_error_threshold: int = 0
+    resource_error_threshold: int = 5
+    user_agent: str = ""
+    viewport_width: int = 1920
+    viewport_height: int = 1080
+    wait_until: str = "load"
+    extra_wait_ms: int = 0
+    mode: str | None = None
+    steps: list[BrowserStep] | None = None
+    script: str | None = None
+    script_env: list[ScriptEnvVar] | None = None
+
+
+class MonitorLocation(BaseModel):
+    id: str
+    label: str
+    checker_region: str | None = None
+    checker_id: str | None = None
+    assigned_checker_id: str | None = None
+    health_status: str = ""
+    health_down_reason: str = ""
+    health_changed_at: str | None = None
+
+
+class LocationParams(BaseModel):
+    checker_id: str | None = None
+    checker_region: str | None = None
+    label: str | None = None
+
+
 class Monitor(BaseModel):
     id: str
     team_id: str
@@ -44,6 +95,11 @@ class Monitor(BaseModel):
     created_by: str
     created_at: str
     updated_at: str
+    aggregate_failure_mode: str | None = None
+    aggregate_failure_count: int | None = None
+    locations: list[MonitorLocation] | None = None
+    type: str = "http"
+    browser_config: BrowserConfig | None = None
 
 
 class CreateMonitorParams(BaseModel):
@@ -71,6 +127,11 @@ class CreateMonitorParams(BaseModel):
     checker_country: str | None = None
     resolve_override_ip: str | None = None
     status: str | None = None
+    locations: list[LocationParams] | None = None
+    aggregate_failure_mode: str | None = None
+    aggregate_failure_count: int | None = None
+    type: str | None = None
+    browser_config: BrowserConfig | None = None
 
     def to_request_body(self) -> dict[str, Any]:
         return self.model_dump(exclude_none=True)

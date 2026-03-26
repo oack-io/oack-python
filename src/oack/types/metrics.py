@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -61,30 +63,52 @@ class TimelineEvent(BaseModel):
 class ChartEvent(BaseModel):
     id: str
     team_id: str
-    monitor_id: str | None = None
-    kind: str
-    source: str
-    title: str
-    body: str
-    start_at: str
-    end_at: str | None = None
-    created_at: str
+    monitor_id: str = ""
+    source: str = ""
+    kind: str = ""
+    title: str = ""
+    description: str = ""
+    url: str = ""
+    severity: str = ""
+    external_id: str = ""
+    started_at: str = ""
+    ended_at: str | None = None
+    metadata: dict[str, Any] | None = None
+    created_by: str = ""
+    created_at: str = ""
+    updated_at: str = ""
 
 
 class CreateChartEventParams(BaseModel):
     monitor_id: str | None = None
     kind: str
-    source: str
     title: str
-    body: str = ""
-    start_at: str
-    end_at: str | None = None
+    description: str = ""
+    url: str | None = None
+    severity: str | None = None
+    started_at: str
+    ended_at: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 class UpdateChartEventParams(BaseModel):
+    monitor_id: str | None = None
     kind: str | None = None
-    source: str | None = None
     title: str | None = None
-    body: str | None = None
-    start_at: str | None = None
-    end_at: str | None = None
+    description: str | None = None
+    url: str | None = None
+    severity: str | None = None
+    started_at: str | None = None
+    ended_at: str | None = None
+    metadata: dict[str, Any] | None = None
+
+
+class IngestChartEventParams(BaseModel):
+    kind: str
+    title: str
+    url: str | None = None
+    started_at: str | None = None
+    ended_at: str | None = None
+    monitor_id: str | None = None
+    severity: str | None = None
+    metadata: dict[str, Any] | None = None

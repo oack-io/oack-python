@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from oack.types.shares import Share
+from oack.types.shares import CreateShareParams, Share
 
 if TYPE_CHECKING:
     from oack._client import AsyncBaseClient, BaseClient
@@ -19,11 +19,10 @@ class AsyncShares:
     def __init__(self, client: AsyncBaseClient) -> None:
         self._client = client
 
-    async def create(self, team_id: str, monitor_id: str, expires_at: str | None = None) -> Share:
-        body: dict[str, Any] = {}
-        if expires_at is not None:
-            body["expires_at"] = expires_at
-        resp = await self._client.request("POST", _shares_path(team_id, monitor_id), json=body)
+    async def create(self, team_id: str, monitor_id: str, params: CreateShareParams) -> Share:
+        resp = await self._client.request(
+            "POST", _shares_path(team_id, monitor_id), json=params.to_request_body()
+        )
         return Share.model_validate_json(resp)
 
     async def list(self, team_id: str, monitor_id: str) -> list[Share]:
@@ -38,11 +37,10 @@ class Shares:
     def __init__(self, client: BaseClient) -> None:
         self._client = client
 
-    def create(self, team_id: str, monitor_id: str, expires_at: str | None = None) -> Share:
-        body: dict[str, Any] = {}
-        if expires_at is not None:
-            body["expires_at"] = expires_at
-        resp = self._client.request("POST", _shares_path(team_id, monitor_id), json=body)
+    def create(self, team_id: str, monitor_id: str, params: CreateShareParams) -> Share:
+        resp = self._client.request(
+            "POST", _shares_path(team_id, monitor_id), json=params.to_request_body()
+        )
         return Share.model_validate_json(resp)
 
     def list(self, team_id: str, monitor_id: str) -> list[Share]:

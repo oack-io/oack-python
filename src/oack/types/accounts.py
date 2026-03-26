@@ -41,3 +41,23 @@ class Subscription(BaseModel):
     plan: str
     subscription_status: str = ""
     founding_member: bool = False
+
+
+class AccountAPIKey(BaseModel):
+    id: str
+    account_id: str
+    name: str
+    key_prefix: str
+    created_by: str
+    expires_at: str | None = None
+    created_at: str
+
+
+class CreateAccountAPIKeyParams(BaseModel):
+    name: str
+    expires_at: str | None = None
+
+
+class CreateAccountAPIKeyResult(BaseModel):
+    key: str
+    api_key: AccountAPIKey

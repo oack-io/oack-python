@@ -555,3 +555,209 @@ class TestUser:
     def test_whoami(self, client: Oack) -> None:
         user = client.user.whoami()
         assert user.id
+
+
+# ---------------------------------------------------------------------------
+# Account API Keys
+# ---------------------------------------------------------------------------
+
+
+class TestAccountAPIKeys:
+    def test_lifecycle(self, client: Oack, unique: str) -> None:
+        from oack.types.accounts import CreateAccountAPIKeyParams
+
+        # Create
+        result = client.accounts.create_api_key(
+            ACCOUNT_ID, CreateAccountAPIKeyParams(name=f"py-acc-key-{unique}")
+        )
+        assert result.key
+        assert result.api_key.name == f"py-acc-key-{unique}"
+        key_id = result.api_key.id
+
+        try:
+            # List
+            keys = client.accounts.list_api_keys(ACCOUNT_ID)
+            assert any(k.id == key_id for k in keys)
+        finally:
+            # Delete
+            client.accounts.delete_api_key(ACCOUNT_ID, key_id)
+
+
+# ---------------------------------------------------------------------------
+# Comments
+# ---------------------------------------------------------------------------
+
+
+class TestComments:
+    def test_lifecycle(self, client: Oack, unique: str) -> None:
+        # Setup
+        team = client.teams.create(ACCOUNT_ID, f"py-acc-comments-team-{unique}")
+        team_id = team.id
+        monitor = client.monitors.create(
+            team_id,
+            CreateMonitorParams(name=f"py-acc-comments-mon-{unique}", url="https://www.google.com", check_interval_ms=30000),
+        )
+        monitor_id = monitor.id
+
+        try:
+            from datetime import datetime, timedelta, timezone
+            from oack.types.comments import CreateCommentParams
+
+            # Create
+            now = datetime.now(timezone.utc).isoformat()
+            comment = client.comments.create(
+                team_id, monitor_id, CreateCommentParams(body="test comment", anchor_at=now)
+            )
+            assert comment.id
+            assert comment.body == "test comment"
+
+            # List
+            from_ts = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat()
+            to_ts = (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat()
+            comments = client.comments.list(team_id, monitor_id, from_ts=from_ts, to_ts=to_ts, include_resolved=True)
+            assert any(c.id == comment.id for c in comments)
+
+            # Edit
+            edited = client.comments.edit(team_id, monitor_id, comment.id, "edited body")
+            assert edited.body == "edited body"
+
+            # Resolve
+            client.comments.resolve(team_id, monitor_id, comment.id)
+
+            # Reopen
+            client.comments.reopen(team_id, monitor_id, comment.id)
+
+            # Reply
+            reply = client.comments.reply(team_id, monitor_id, comment.id, "reply text")
+            assert reply.id
+
+            # List replies
+            replies = client.comments.list_replies(team_id, monitor_id, comment.id)
+            assert any(r.id == reply.id for r in replies)
+
+            # Delete
+            client.comments.delete(team_id, monitor_id, reply.id)
+            client.comments.delete(team_id, monitor_id, comment.id)
+        finally:
+            client.monitors.delete(team_id, monitor_id)
+            client.teams.delete(team_id)
+
+
+# ---------------------------------------------------------------------------
+# Shares
+# ---------------------------------------------------------------------------
+
+
+class TestShares:
+    def test_lifecycle(self, client: Oack, unique: str) -> None:
+        team = client.teams.create(ACCOUNT_ID, f"py-acc-shares-team-{unique}")
+        team_id = team.id
+        monitor = client.monitors.create(
+            team_id,
+            CreateMonitorParams(name=f"py-acc-shares-mon-{unique}", url="https://www.google.com", check_interval_ms=30000),
+        )
+        monitor_id = monitor.id
+
+        try:
+            from datetime import datetime, timedelta, timezone
+            from oack.types.shares import CreateShareParams
+
+            now = datetime.now(timezone.utc)
+            from_ts = (now - timedelta(days=1)).isoformat()
+            to_ts = now.isoformat()
+
+            # Create
+            share = client.shares.create(
+                team_id, monitor_id, CreateShareParams(from_ts=from_ts, to=to_ts, access_mode="public", expires_in="7d")
+            )
+            assert share.id
+            assert share.token
+
+            # List
+            shares = client.shares.list(team_id, monitor_id)
+            assert any(s.id == share.id for s in shares)
+
+            # Revoke
+            client.shares.revoke(team_id, monitor_id, share.id)
+        finally:
+            client.monitors.delete(team_id, monitor_id)
+            client.teams.delete(team_id)
+
+
+# ---------------------------------------------------------------------------
+# Traces
+# ---------------------------------------------------------------------------
+
+
+class TestTraces:
+    def test_list(self, client: Oack, unique: str) -> None:
+        team = client.teams.create(ACCOUNT_ID, f"py-acc-traces-team-{unique}")
+        team_id = team.id
+        monitor = client.monitors.create(
+            team_id,
+            CreateMonitorParams(name=f"py-acc-traces-mon-{unique}", url="https://www.google.com", check_interval_ms=30000),
+        )
+        monitor_id = monitor.id
+
+        try:
+            try:
+                traces = client.traces.list(team_id, monitor_id)
+                assert isinstance(traces, list)
+            except Exception as e:
+                # Traces endpoint may not be enabled in all environments
+                if "404" in str(e):
+                    pass
+                else:
+                    raise
+        finally:
+            client.monitors.delete(team_id, monitor_id)
+            client.teams.delete(team_id)
+
+
+# ---------------------------------------------------------------------------
+# User Preferences
+# ---------------------------------------------------------------------------
+
+
+class TestUserPreferences:
+    def test_get_preferences(self, client: Oack) -> None:
+        prefs = client.user.get_preferences()
+        assert prefs is not None
+
+
+# ---------------------------------------------------------------------------
+# Monitor Actions (move, test_alert)
+# ---------------------------------------------------------------------------
+
+
+class TestMonitorActions:
+    def test_move(self, client: Oack, unique: str) -> None:
+        team = client.teams.create(ACCOUNT_ID, f"py-acc-move-team-{unique}")
+        team2 = client.teams.create(ACCOUNT_ID, f"py-acc-move-team2-{unique}")
+        team_id, team2_id = team.id, team2.id
+
+        try:
+            monitor = client.monitors.create(
+                team_id,
+                CreateMonitorParams(name=f"py-acc-move-mon-{unique}", url="https://www.google.com", check_interval_ms=30000),
+            )
+            moved = client.monitors.move(team_id, monitor.id, team2_id)
+            assert moved.team_id == team2_id
+            client.monitors.delete(team2_id, monitor.id)
+        finally:
+            client.teams.delete(team2_id)
+            client.teams.delete(team_id)
+
+    def test_test_alert(self, client: Oack, unique: str) -> None:
+        team = client.teams.create(ACCOUNT_ID, f"py-acc-testalert-team-{unique}")
+        team_id = team.id
+
+        try:
+            monitor = client.monitors.create(
+                team_id,
+                CreateMonitorParams(name=f"py-acc-testalert-mon-{unique}", url="https://www.google.com", check_interval_ms=30000),
+            )
+            client.monitors.test_alert(team_id, monitor.id)
+            client.monitors.delete(team_id, monitor.id)
+        finally:
+            client.teams.delete(team_id)

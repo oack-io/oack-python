@@ -4,7 +4,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from oack.types.accounts import Account, AccountInvite, AccountMember, Subscription
+from oack.types.accounts import (
+    Account,
+    AccountAPIKey,
+    AccountInvite,
+    AccountMember,
+    CreateAccountAPIKeyParams,
+    CreateAccountAPIKeyResult,
+    Subscription,
+)
 
 if TYPE_CHECKING:
     from oack._client import AsyncBaseClient, BaseClient
@@ -77,6 +85,19 @@ class AsyncAccounts:
     async def revoke_invite(self, account_id: str, invite_id: str) -> None:
         await self._client.request("DELETE", f"/api/v1/accounts/{account_id}/invites/{invite_id}")
 
+    async def create_api_key(self, account_id: str, params: CreateAccountAPIKeyParams) -> CreateAccountAPIKeyResult:
+        resp = await self._client.request(
+            "POST", f"/api/v1/accounts/{account_id}/api-keys", json=params.model_dump(exclude_none=True)
+        )
+        return CreateAccountAPIKeyResult.model_validate_json(resp)
+
+    async def list_api_keys(self, account_id: str) -> list[AccountAPIKey]:
+        resp = await self._client.request("GET", f"/api/v1/accounts/{account_id}/api-keys")
+        return [AccountAPIKey.model_validate(k) for k in _parse_list(resp)]
+
+    async def delete_api_key(self, account_id: str, key_id: str) -> None:
+        await self._client.request("DELETE", f"/api/v1/accounts/{account_id}/api-keys/{key_id}")
+
 
 class Accounts:
     def __init__(self, client: BaseClient) -> None:
@@ -142,6 +163,19 @@ class Accounts:
 
     def revoke_invite(self, account_id: str, invite_id: str) -> None:
         self._client.request("DELETE", f"/api/v1/accounts/{account_id}/invites/{invite_id}")
+
+    def create_api_key(self, account_id: str, params: CreateAccountAPIKeyParams) -> CreateAccountAPIKeyResult:
+        resp = self._client.request(
+            "POST", f"/api/v1/accounts/{account_id}/api-keys", json=params.model_dump(exclude_none=True)
+        )
+        return CreateAccountAPIKeyResult.model_validate_json(resp)
+
+    def list_api_keys(self, account_id: str) -> list[AccountAPIKey]:
+        resp = self._client.request("GET", f"/api/v1/accounts/{account_id}/api-keys")
+        return [AccountAPIKey.model_validate(k) for k in _parse_list(resp)]
+
+    def delete_api_key(self, account_id: str, key_id: str) -> None:
+        self._client.request("DELETE", f"/api/v1/accounts/{account_id}/api-keys/{key_id}")
 
 
 def _parse_list(resp: bytes) -> list[dict]:
