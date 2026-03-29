@@ -43,7 +43,7 @@ class TestScriptResult(BaseModel):
 
 # Rebuild model to resolve forward references from TYPE_CHECKING imports.
 def _rebuild() -> None:
-    from oack.types.browser_probes import ConsoleMessage, StepResult  # noqa: F811
+    from oack.types.browser_probes import ConsoleMessage, StepResult
 
     TestScriptResult.model_rebuild(_types_namespace={"ConsoleMessage": ConsoleMessage, "StepResult": StepResult})
 
