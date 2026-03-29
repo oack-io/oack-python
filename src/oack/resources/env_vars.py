@@ -24,17 +24,11 @@ class AsyncEnvVars:
         return [EnvVar.model_validate(v) for v in json.loads(resp)]
 
     async def create(self, team_id: str, params: CreateEnvVarParams) -> EnvVar:
-        resp = await self._client.request(
-            "POST", _env_path(team_id), json=params.model_dump()
-        )
+        resp = await self._client.request("POST", _env_path(team_id), json=params.model_dump())
         return EnvVar.model_validate_json(resp)
 
-    async def update(
-        self, team_id: str, key: str, params: UpdateEnvVarParams
-    ) -> EnvVar:
-        resp = await self._client.request(
-            "PUT", f"{_env_path(team_id)}/{key}", json=params.model_dump()
-        )
+    async def update(self, team_id: str, key: str, params: UpdateEnvVarParams) -> EnvVar:
+        resp = await self._client.request("PUT", f"{_env_path(team_id)}/{key}", json=params.model_dump())
         return EnvVar.model_validate_json(resp)
 
     async def delete(self, team_id: str, key: str) -> None:
@@ -50,15 +44,11 @@ class EnvVars:
         return [EnvVar.model_validate(v) for v in json.loads(resp)]
 
     def create(self, team_id: str, params: CreateEnvVarParams) -> EnvVar:
-        resp = self._client.request(
-            "POST", _env_path(team_id), json=params.model_dump()
-        )
+        resp = self._client.request("POST", _env_path(team_id), json=params.model_dump())
         return EnvVar.model_validate_json(resp)
 
     def update(self, team_id: str, key: str, params: UpdateEnvVarParams) -> EnvVar:
-        resp = self._client.request(
-            "PUT", f"{_env_path(team_id)}/{key}", json=params.model_dump()
-        )
+        resp = self._client.request("PUT", f"{_env_path(team_id)}/{key}", json=params.model_dump())
         return EnvVar.model_validate_json(resp)
 
     def delete(self, team_id: str, key: str) -> None:

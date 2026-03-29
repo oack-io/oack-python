@@ -23,15 +23,11 @@ class AsyncTestScript:
     def __init__(self, client: AsyncBaseClient) -> None:
         self._client = client
 
-    async def run(
-        self, team_id: str, monitor_id: str, params: TestScriptParams
-    ) -> TestScriptResult:
+    async def run(self, team_id: str, monitor_id: str, params: TestScriptParams) -> TestScriptResult:
         import asyncio
 
         submit_path = _test_script_path(team_id, monitor_id)
-        resp = await self._client.request(
-            "POST", submit_path, json=params.model_dump(exclude_none=True)
-        )
+        resp = await self._client.request("POST", submit_path, json=params.model_dump(exclude_none=True))
         submit = json.loads(resp)
         test_id = submit.get("test_id")
         if not test_id:
@@ -56,13 +52,9 @@ class TestScript:
     def __init__(self, client: BaseClient) -> None:
         self._client = client
 
-    def run(
-        self, team_id: str, monitor_id: str, params: TestScriptParams
-    ) -> TestScriptResult:
+    def run(self, team_id: str, monitor_id: str, params: TestScriptParams) -> TestScriptResult:
         submit_path = _test_script_path(team_id, monitor_id)
-        resp = self._client.request(
-            "POST", submit_path, json=params.model_dump(exclude_none=True)
-        )
+        resp = self._client.request("POST", submit_path, json=params.model_dump(exclude_none=True))
         submit = json.loads(resp)
         test_id = submit.get("test_id")
         if not test_id:
