@@ -4,6 +4,7 @@ from oack.types.accounts import Account, AccountInvite, AccountMember, Subscript
 from oack.types.alert_channels import AlertChannel, AlertEvent, CreateAlertChannelParams, MonitorChannelsResponse
 from oack.types.cf_logs import CFLogEntry, CFLogListOptions
 from oack.types.comments import Comment, CommentEdit, CommentReply
+from oack.types.env_vars import CreateEnvVarParams, EnvVar, UpdateEnvVarParams
 from oack.types.external_links import ExternalLink
 from oack.types.geo import Checker, GeoCountry, GeoRegion
 from oack.types.integrations import CFIntegration, PDIntegration
@@ -35,6 +36,7 @@ from oack.types.status_pages import (
     Watchdog,
 )
 from oack.types.teams import AcceptInviteResult, CreateTeamAPIKeyResult, Team, TeamAPIKey, TeamInvite, TeamMember
+from oack.types.test_script import TestScriptParams, TestScriptResult, WebVitals
 from oack.types.traces import Trace
 from oack.types.user import Device, Preferences, TelegramLink, TelegramLinkStatus, User
 
@@ -57,9 +59,11 @@ __all__ = [
     "ComponentGroup",
     "CreateAlertChannelParams",
     "CreateChartEventParams",
+    "CreateEnvVarParams",
     "CreateMonitorParams",
     "CreateTeamAPIKeyResult",
     "Device",
+    "EnvVar",
     "Expiration",
     "ExpirationDomain",
     "ExpirationSSL",
@@ -94,8 +98,12 @@ __all__ = [
     "TelegramLink",
     "TelegramLinkStatus",
     "TimelineEvent",
+    "TestScriptParams",
+    "TestScriptResult",
     "Trace",
     "UpdateChartEventParams",
+    "UpdateEnvVarParams",
     "User",
     "Watchdog",
+    "WebVitals",
 ]

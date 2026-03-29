@@ -23,6 +23,7 @@ from oack.resources.alert_channels import AlertChannels, AsyncAlertChannels
 from oack.resources.browser_probes import AsyncBrowserProbes, BrowserProbes
 from oack.resources.cf_logs import AsyncCFLogs, CFLogs
 from oack.resources.comments import AsyncComments, Comments
+from oack.resources.env_vars import AsyncEnvVars, EnvVars
 from oack.resources.external_links import AsyncExternalLinks, ExternalLinks
 from oack.resources.geo import AsyncGeo, Geo
 from oack.resources.integrations import AsyncIntegrations, Integrations
@@ -33,6 +34,7 @@ from oack.resources.probes import AsyncProbes, Probes
 from oack.resources.shares import AsyncShares, Shares
 from oack.resources.status_pages import AsyncStatusPages, StatusPages
 from oack.resources.teams import AsyncTeams, Teams
+from oack.resources.test_script import AsyncTestScript, TestScript
 from oack.resources.traces import AsyncTraces, Traces
 from oack.resources.user import AsyncUser, SyncUser
 from oack.resources.watchdogs import AsyncWatchdogs, Watchdogs
@@ -82,6 +84,8 @@ class AsyncOack:
         self.user = AsyncUser(self._client)
         self.cf_logs = AsyncCFLogs(self._client)
         self.browser_probes = AsyncBrowserProbes(self._client)
+        self.env_vars = AsyncEnvVars(self._client)
+        self.test_script = AsyncTestScript(self._client)
         self.watchdogs = AsyncWatchdogs(self._client)
 
     async def close(self) -> None:
@@ -136,6 +140,8 @@ class Oack:
         self.user = SyncUser(self._client)
         self.cf_logs = CFLogs(self._client)
         self.browser_probes = BrowserProbes(self._client)
+        self.env_vars = EnvVars(self._client)
+        self.test_script = TestScript(self._client)
         self.watchdogs = Watchdogs(self._client)
 
     def close(self) -> None:

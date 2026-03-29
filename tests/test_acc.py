@@ -17,6 +17,7 @@ import time
 import pytest
 
 from oack import Oack
+from oack.types.env_vars import CreateEnvVarParams, UpdateEnvVarParams
 from oack.types.monitors import CreateMonitorParams
 
 API_KEY = os.environ.get("OACK_API_KEY", "")
@@ -759,5 +760,43 @@ class TestMonitorActions:
             )
             client.monitors.test_alert(team_id, monitor.id)
             client.monitors.delete(team_id, monitor.id)
+        finally:
+            client.teams.delete(team_id)
+
+
+# ---------------------------------------------------------------------------
+# Environment Variables
+# ---------------------------------------------------------------------------
+
+
+class TestEnvVars:
+    def test_lifecycle(self, client: Oack, unique: str) -> None:
+        team = client.teams.create(ACCOUNT_ID, f"py-acc-env-{unique}")
+        team_id = team.id
+        test_key = f"TEST_KEY_{unique}"
+
+        try:
+            # Create
+            ev = client.env_vars.create(
+                team_id, CreateEnvVarParams(key=test_key, value="test-value")
+            )
+            assert ev.key == test_key
+            assert ev.value == "test-value"
+            assert ev.is_secret is False
+
+            # List
+            env_vars = client.env_vars.list(team_id)
+            assert any(v.key == test_key for v in env_vars)
+
+            # Update
+            updated = client.env_vars.update(
+                team_id, test_key, UpdateEnvVarParams(value="updated-value")
+            )
+            assert updated.value == "updated-value"
+
+            # Delete
+            client.env_vars.delete(team_id, test_key)
+            remaining = client.env_vars.list(team_id)
+            assert not any(v.key == test_key for v in remaining)
         finally:
             client.teams.delete(team_id)
