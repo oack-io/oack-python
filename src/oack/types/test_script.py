@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel
 
-from oack.types.browser_probes import ConsoleMessage, StepResult
+if TYPE_CHECKING:
+    from oack.types.browser_probes import ConsoleMessage, StepResult
 
 
 class WebVitals(BaseModel):
@@ -36,3 +39,14 @@ class TestScriptResult(BaseModel):
     fail_count: int = 0
     skip_count: int = 0
     web_vitals: WebVitals | None = None
+
+
+# Rebuild model to resolve forward references from TYPE_CHECKING imports.
+def _rebuild() -> None:
+    from oack.types.browser_probes import ConsoleMessage, StepResult  # noqa: F811
+
+    TestScriptResult.model_rebuild(_types_namespace={"ConsoleMessage": ConsoleMessage, "StepResult": StepResult})
+
+
+_rebuild()
+del _rebuild
