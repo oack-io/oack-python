@@ -24,13 +24,18 @@ from oack.resources.browser_probes import AsyncBrowserProbes, BrowserProbes
 from oack.resources.cf_logs import AsyncCFLogs, CFLogs
 from oack.resources.comments import AsyncComments, Comments
 from oack.resources.env_vars import AsyncEnvVars, EnvVars
+from oack.resources.escalation_policies import AsyncEscalationPolicies, EscalationPolicies
 from oack.resources.external_links import AsyncExternalLinks, ExternalLinks
 from oack.resources.geo import AsyncGeo, Geo
+from oack.resources.incidents import AccountIncidents, AsyncAccountIncidents
 from oack.resources.integrations import AsyncIntegrations, Integrations
 from oack.resources.metrics import AsyncMetrics, Metrics
 from oack.resources.monitors import AsyncMonitors, Monitors
 from oack.resources.notifications import AsyncNotifications, Notifications
+from oack.resources.oncall import AsyncOnCall, OnCall
+from oack.resources.postmortems import AsyncPostmortems, Postmortems
 from oack.resources.probes import AsyncProbes, Probes
+from oack.resources.services import AsyncServices, Services
 from oack.resources.shares import AsyncShares, Shares
 from oack.resources.status_pages import AsyncStatusPages, StatusPages
 from oack.resources.teams import AsyncTeams, Teams
@@ -88,6 +93,11 @@ class AsyncOack:
         self.env_vars = AsyncEnvVars(self._client)
         self.test_script = AsyncTestScript(self._client)
         self.triggers = AsyncTriggers(self._client)
+        self.services = AsyncServices(self._client)
+        self.incidents = AsyncAccountIncidents(self._client)
+        self.oncall = AsyncOnCall(self._client)
+        self.escalation_policies = AsyncEscalationPolicies(self._client)
+        self.postmortems = AsyncPostmortems(self._client)
         self.watchdogs = AsyncWatchdogs(self._client)  # deprecated
 
     async def close(self) -> None:
@@ -145,6 +155,11 @@ class Oack:
         self.env_vars = EnvVars(self._client)
         self.test_script = TestScript(self._client)
         self.triggers = Triggers(self._client)
+        self.services = Services(self._client)
+        self.incidents = AccountIncidents(self._client)
+        self.oncall = OnCall(self._client)
+        self.escalation_policies = EscalationPolicies(self._client)
+        self.postmortems = Postmortems(self._client)
         self.watchdogs = Watchdogs(self._client)  # deprecated
 
     def close(self) -> None:
