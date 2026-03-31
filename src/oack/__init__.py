@@ -36,8 +36,9 @@ from oack.resources.status_pages import AsyncStatusPages, StatusPages
 from oack.resources.teams import AsyncTeams, Teams
 from oack.resources.test_script import AsyncTestScript, TestScript
 from oack.resources.traces import AsyncTraces, Traces
+from oack.resources.triggers import AsyncTriggers, Triggers
 from oack.resources.user import AsyncUser, SyncUser
-from oack.resources.watchdogs import AsyncWatchdogs, Watchdogs
+from oack.resources.watchdogs import AsyncWatchdogs, Watchdogs  # deprecated aliases
 
 __version__ = "0.1.0"
 
@@ -86,7 +87,8 @@ class AsyncOack:
         self.browser_probes = AsyncBrowserProbes(self._client)
         self.env_vars = AsyncEnvVars(self._client)
         self.test_script = AsyncTestScript(self._client)
-        self.watchdogs = AsyncWatchdogs(self._client)
+        self.triggers = AsyncTriggers(self._client)
+        self.watchdogs = AsyncWatchdogs(self._client)  # deprecated
 
     async def close(self) -> None:
         await self._client.close()
@@ -142,7 +144,8 @@ class Oack:
         self.browser_probes = BrowserProbes(self._client)
         self.env_vars = EnvVars(self._client)
         self.test_script = TestScript(self._client)
-        self.watchdogs = Watchdogs(self._client)
+        self.triggers = Triggers(self._client)
+        self.watchdogs = Watchdogs(self._client)  # deprecated
 
     def close(self) -> None:
         self._client.close()

@@ -38,6 +38,11 @@ from oack.types.status_pages import (
 from oack.types.teams import AcceptInviteResult, CreateTeamAPIKeyResult, Team, TeamAPIKey, TeamInvite, TeamMember
 from oack.types.test_script import TestScriptParams, TestScriptResult, WebVitals
 from oack.types.traces import Trace
+from oack.types.triggers import (
+    CreateTriggerParams,
+    Trigger,
+    UpdateTriggerParams,
+)
 from oack.types.user import Device, Preferences, TelegramLink, TelegramLinkStatus, User
 
 __all__ = [
@@ -62,6 +67,7 @@ __all__ = [
     "CreateEnvVarParams",
     "CreateMonitorParams",
     "CreateTeamAPIKeyResult",
+    "CreateTriggerParams",
     "Device",
     "EnvVar",
     "Expiration",
@@ -101,8 +107,10 @@ __all__ = [
     "TestScriptResult",
     "TimelineEvent",
     "Trace",
+    "Trigger",
     "UpdateChartEventParams",
     "UpdateEnvVarParams",
+    "UpdateTriggerParams",
     "User",
     "Watchdog",
     "WebVitals",
