@@ -39,6 +39,21 @@ class BrowserConfig(BaseModel):
     steps: list[BrowserStep] | None = None
     script: str | None = None
     script_env: list[ScriptEnvVar] | None = None
+    suite_url: str | None = None
+    deps_url: str | None = None
+    deps_hash: str | None = None
+    pw_project: str | None = None
+    pw_grep: str | None = None
+    pw_tag: str | None = None
+    suite_git_sha: str | None = None
+    suite_git_branch: str | None = None
+    suite_git_origin: str | None = None
+    suite_deploy_host: str | None = None
+    suite_uploaded_at: str | None = None
+    suite_deployed_by_id: str | None = None
+    suite_deployed_by: str | None = None
+    suite_deployed_by_img: str | None = None
+    suite_deploy_cmd: str | None = None
 
 
 class MonitorLocation(BaseModel):
