@@ -45,7 +45,7 @@ from oack.resources.triggers import AsyncTriggers, Triggers
 from oack.resources.user import AsyncUser, SyncUser
 from oack.resources.watchdogs import AsyncWatchdogs, Watchdogs  # deprecated aliases
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 class AsyncOack:

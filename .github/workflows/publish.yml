@@ -23,6 +23,17 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
 
+      - name: Verify version consistency
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          PYPROJECT=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          INIT=$(python3 -c "import ast; tree=ast.parse(open('src/oack/__init__.py').read()); print(next(node.value.value for node in ast.walk(tree) if isinstance(node, ast.Assign) and any(t.id=='__version__' for t in node.targets if isinstance(t, ast.Name))))")
+          echo "Tag: $TAG | pyproject.toml: $PYPROJECT | __init__.py: $INIT"
+          if [ "$TAG" != "$PYPROJECT" ] || [ "$TAG" != "$INIT" ]; then
+            echo "::error::Version mismatch! Tag=$TAG pyproject.toml=$PYPROJECT __init__.py=$INIT"
+            exit 1
+          fi
+
       - name: Build
         run: uv build
 
